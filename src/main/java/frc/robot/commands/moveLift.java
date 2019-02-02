@@ -8,31 +8,25 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 
-
-public class moveArm extends Command {
-  public double target;
-  public moveArm() {
-    requires(Robot.m_arm);
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+public class moveLift extends Command {
+  private int target;
+  public moveLift() {
+    requires(Robot.m_lift);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    target = Robot.m_arm.getPos();
+    target = Robot.m_lift.getPos();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    target += Robot.m_oi.getRightX()/10;
-    Robot.m_arm.setTarget(target);
-    SmartDashboard.putNumber("ArmTarget", target);
-    SmartDashboard.putNumber("ArmPower", Robot.m_arm.neo.getAppliedOutput());
+    target += Robot.m_oi.getLeftY()*2000;
+    Robot.m_lift.setTarget(target);
   }
 
   // Make this return true when this Command no longer needs to run execute()

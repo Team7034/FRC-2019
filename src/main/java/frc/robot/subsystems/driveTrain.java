@@ -47,8 +47,6 @@ public class driveTrain extends Subsystem {
 		talonL3.follow(talonL);
 		talonR2.follow(talonR);
 		talonR3.follow(talonR);
-
-		//talonR.setInverted(InvertType.InvertMotorOutput);
 		
     	talonL.setSelectedSensorPosition(0);
     	talonR.setSelectedSensorPosition(0);
@@ -63,9 +61,6 @@ public class driveTrain extends Subsystem {
     
         //leftPID = new PIDController(.039,1E-8,0.095,0, gyro, talonL);
         //rightPID = new PIDController(.039,1E-8,0.095,0, gyro, talonR);
-        
-      	timer = new Timer();
-		timer.start();
     }
     
     public void drive(double speed, double rot) {
@@ -81,6 +76,12 @@ public class driveTrain extends Subsystem {
 	
 	public double getAngle() {
 		return gyro.getAngle();
+	}
+
+	public void zero() {
+		talonL.setSelectedSensorPosition(0);
+		talonR.setSelectedSensorPosition(0);
+		gyro.zeroYaw();
 	}
 }
 

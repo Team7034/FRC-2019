@@ -12,12 +12,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.driveTrain;
-import frc.robot.subsystems.pneumatics;
-import frc.robot.subsystems.arm;
-import frc.robot.commands.drive;
-import frc.robot.commands.mainAuto;
-import frc.robot.commands.moveArm;
+import frc.robot.subsystems.*;
+import frc.robot.commands.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,9 +24,10 @@ import frc.robot.commands.moveArm;
  */
 public class Robot extends TimedRobot {
   public static OI m_oi;
-  public static driveTrain m_driveTrain = new driveTrain();
-  public static pneumatics m_pneumatics = new pneumatics();
   public static arm m_arm = new arm();
+  public static driveTrain m_driveTrain = new driveTrain();
+  public static lift m_lift = new lift();
+  public static pneumatics m_pneumatics = new pneumatics();
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -42,9 +39,10 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_oi = new OI();
-    m_chooser.setDefaultOption("Default Auto", new mainAuto());
+    m_chooser.setDefaultOption("Default Auto", new pathFollower());
     //chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
+    SmartDashboard.putString("Path Name", "simple");
   }
 
   /**
@@ -119,7 +117,6 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     Scheduler.getInstance().add(new drive());
-    Scheduler.getInstance().add(new moveArm());
   }
 
   /**
@@ -127,12 +124,20 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    Scheduler.getInstance().add(new moveArm());
+    Scheduler.getInstance().add(new moveLift());
+    if(Math.abs(m_oi.getDriveX()) > 0.01 || Math.abs(m_oi.getDriveY()) > 0.01) {
+      Scheduler.getInstance().add(new drive());
+    }
     Scheduler.getInstance().run();
     SmartDashboard.putNumber("PositionL", m_driveTrain.talonL.getSelectedSensorPosition());
     SmartDashboard.putNumber("PositionR", m_driveTrain.talonR.getSelectedSensorPosition());
     SmartDashboard.putNumber("VelocityL", m_driveTrain.talonL.getSelectedSensorVelocity());
     SmartDashboard.putNumber("VelocityR", m_driveTrain.talonR.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Gyro", m_driveTrain.getAngle());
+    SmartDashboard.putNumber("Lift", m_lift.talon.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Arm", m_arm.getPos());
+    SmartDashboard.putNumber("StickPOV", OI.stick.getPOV());
   }
 
   /**

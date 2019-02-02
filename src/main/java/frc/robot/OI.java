@@ -7,7 +7,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.GamepadBase;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.HIDType;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.*;
@@ -17,18 +21,32 @@ import frc.robot.commands.*;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-  public Button joyTrigger = new JoystickButton(stick, 1);
-  public Button joyB3 = new JoystickButton(stick, 3);
-  public Button joyB4 = new JoystickButton(stick, 4);
-  public Button joyB5 = new JoystickButton(stick, 5);
-  public Button joyB6 = new JoystickButton(stick, 6);
-  public Button joyB7 = new JoystickButton(stick, 7);
-
   static Joystick stick = new Joystick(RobotMap.joystick); //LogitechX3D
+  static Controller gamepad = new Controller(RobotMap.gamepad);
+  Button joyTrigger = new JoystickButton(stick, 1);
+  Button joyB2 = new JoystickButton(stick, 2);
+  Button joyB3 = new JoystickButton(stick, 3);
+  Button joyB4 = new JoystickButton(stick, 4);
+  Button joyB5 = new JoystickButton(stick, 5);
+  Button joyB6 = new JoystickButton(stick, 6);
+  Button joyB7 = new JoystickButton(stick, 7);
+  Button joyB12 = new JoystickButton(stick, 12);
+  
+
+  Button gamepadB = new JoystickButton(gamepad, 2);
+  Button gamepadA = new JoystickButton(gamepad, 1);
+
+  
+
 
   public OI() {
     joyTrigger.whenPressed(new shift(false));
     joyTrigger.whenReleased(new shift(true));
+    joyB2.whenPressed(new zeroSensors());
+    joyB7.whenPressed(new runIntake(.75));
+    joyB7.whenReleased(new runIntake(0));
+    joyB12.whenPressed(new pathFollower());
+    
   }
   //// CREATING BUTTONS
   // One type of button is a joystick button which is any button on a
@@ -66,6 +84,13 @@ public class OI {
   }
   public double getSlider() {
     return stick.getThrottle();
+  }
+
+  public double getRightX() {
+    return gamepad.getRX();
+  }
+  public double getLeftY() {
+    return gamepad.getLY();
   }
   
 }

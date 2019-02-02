@@ -23,11 +23,21 @@ public class RobotMap {
   public static final int driveR2 = 2;
   public static final int driveR3 = 5;
 
+  public static final int liftL = 6;
+  public static final int liftR = 7;
+
+  public static final int intakeL = 8;
+  public static final int intakeR = 9;
+
+
+
   //sparks
-  public static final int neo1 = 0;
+  public static final int armL = 0;
+  public static final int armR = 1;
 
   //controllers
   public static final int joystick = 0;
+  public static final int gamepad = 1;
 
   //pneumatics
   public static final int compressor = 0;

@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 
@@ -24,8 +25,6 @@ import com.revrobotics.CANSparkMaxLowLevel.ConfigParameter;
 public class arm extends Subsystem {
   public CANSparkMax neo;
   public CANSparkMax neo2;
-  public WPI_TalonSRX talon;
-  public WPI_TalonSRX talon2;
 
 
   CANPIDController controller;
@@ -36,19 +35,18 @@ public class arm extends Subsystem {
   public void initDefaultCommand() {
     neo = new CANSparkMax(RobotMap.armL, CANSparkMaxLowLevel.MotorType.kBrushless);
     neo2 = new CANSparkMax(RobotMap.armR, CANSparkMaxLowLevel.MotorType.kBrushless);
-    talon = new WPI_TalonSRX(RobotMap.intakeL);
-    talon2 = new WPI_TalonSRX(RobotMap.intakeR);
+    
 
     //followers
     neo2.follow(neo, true);
-    talon2.follow(talon);
-    talon.setInverted(true);
+
 
     controller = neo.getPIDController();
 
     controller.setP(1);
-    controller.setOutputRange(-.1, .1);
+    controller.setOutputRange(-.15, .15);
 
+    neo.set(0);
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   }
@@ -61,11 +59,8 @@ public class arm extends Subsystem {
     return neo.getEncoder().getPosition();
   }
 
+  //Mechanical range is 39 revolutions (encoder ticks)
   public void setTarget(double target) {
     controller.setReference(target, ControlType.kPosition);
-  }
-
-  public void runIntake(double speed) {
-    talon.set(speed);
   }
 }

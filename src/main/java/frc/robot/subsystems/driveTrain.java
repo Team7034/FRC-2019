@@ -35,6 +35,8 @@ public class driveTrain extends Subsystem {
 	public static final double TICKS_PER_REV = 3600.0;
 	public static final double MAX_SPEED = 7000;
 
+	private boolean reversed = false;
+
     public void initDefaultCommand() {
     	//Drive TalonSRX's
     	talonL = new WPI_TalonSRX(RobotMap.driveL1); //main left motor
@@ -49,7 +51,7 @@ public class driveTrain extends Subsystem {
 		talonR3.follow(talonR);
 		
     	talonL.setSelectedSensorPosition(0);
-    	talonR.setSelectedSensorPosition(0);
+		talonR.setSelectedSensorPosition(0);
     	
     	robot = new DifferentialDrive(talonL, talonR);
         
@@ -64,8 +66,17 @@ public class driveTrain extends Subsystem {
     }
     
     public void drive(double speed, double rot) {
-    	robot.arcadeDrive(-speed, -rot);
-    }
+		if (reversed) {
+			robot.arcadeDrive(speed, -rot);
+		}
+		else {
+			robot.arcadeDrive(-speed, -rot);
+		}	
+	}
+
+	public void toggleReverse() {
+		reversed = !reversed;
+	}
     
     public void setTarget(int targetL, int targetR) {
 		talonL.set(ControlMode.PercentOutput, 0);
@@ -82,6 +93,12 @@ public class driveTrain extends Subsystem {
 		talonL.setSelectedSensorPosition(0);
 		talonR.setSelectedSensorPosition(0);
 		gyro.zeroYaw();
+	}
+
+	public double getResistance() {
+		double resistanceL = Math.abs(MAX_SPEED*talonL.getMotorOutputPercent()/talonL.getSelectedSensorVelocity());
+		double resistanceR = Math.abs(MAX_SPEED*talonR.getMotorOutputPercent()/talonR.getSelectedSensorVelocity());
+		return (resistanceL + resistanceR)/2;
 	}
 }
 

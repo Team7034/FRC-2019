@@ -29,7 +29,8 @@ public class moveArm extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    target += Robot.m_oi.getRightX()/10;
+    target += Robot.m_oi.getRightX()/5;
+
     Robot.m_arm.setTarget(target);
     SmartDashboard.putNumber("ArmTarget", target);
     SmartDashboard.putNumber("ArmPower", Robot.m_arm.neo.getAppliedOutput());

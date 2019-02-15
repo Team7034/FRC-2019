@@ -21,7 +21,7 @@ public class runIntake extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.m_arm.runIntake(power);
+    Robot.m_claw.runIntake(power);
   }
 
   // Called repeatedly when this Command is scheduled to run

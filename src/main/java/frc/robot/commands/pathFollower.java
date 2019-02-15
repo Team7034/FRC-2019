@@ -24,21 +24,20 @@ public class pathFollower extends Command {
 	private final double D = 0.1;
 	private final double A = 0;
 
-	private String pathName = SmartDashboard.getString("Path Name", "simple");
+	private String pathName = "";
 
 	private Notifier follower;
 	
     public pathFollower() {
     	super("pathFollower");
 		requires(Robot.m_driveTrain);
-		requires(Robot.m_pneumatics);
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-		Robot.m_pneumatics.extendShifter();
+		pathName = SmartDashboard.getString("Path Name", "simple");
 
 		//Generates left and right trajectories from csv files on the roboRIO
 		Trajectory lTrajectory = PathfinderFRC.getTrajectory(pathName + ".left");
@@ -81,6 +80,8 @@ public class pathFollower extends Command {
     // subsystems is scheduled to run
     protected void interrupted() {
 		follower.stop();
+		Robot.m_driveTrain.talonL.set(0);
+		Robot.m_driveTrain.talonR.set(0);
 	}
 
 	private void followPath() {

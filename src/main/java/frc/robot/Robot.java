@@ -27,10 +27,16 @@ public class Robot extends TimedRobot {
   public static arm m_arm = new arm();
   public static driveTrain m_driveTrain = new driveTrain();
   public static lift m_lift = new lift();
-  public static pneumatics m_pneumatics = new pneumatics();
+  public static shifter m_shifter = new shifter();
+  public static claw m_claw = new claw();
+
+  //public static LaunchPadListener listener = new LaunchPadListener();
+
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+  public boolean drivable = true;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -43,6 +49,7 @@ public class Robot extends TimedRobot {
     //chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
     SmartDashboard.putString("Path Name", "simple");
+    //new LaunchPadListener();
   }
 
   /**
@@ -116,7 +123,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    Scheduler.getInstance().add(new drive());
+    //Scheduler.getInstance().add(new moveArm());
+    //Scheduler.getInstance().add(new moveLift());
+    //listener.run();
   }
 
   /**
@@ -124,20 +133,17 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    Scheduler.getInstance().add(new moveArm());
-    Scheduler.getInstance().add(new moveLift());
-    if(Math.abs(m_oi.getDriveX()) > 0.01 || Math.abs(m_oi.getDriveY()) > 0.01) {
+    if(drivable) {
       Scheduler.getInstance().add(new drive());
     }
     Scheduler.getInstance().run();
     SmartDashboard.putNumber("PositionL", m_driveTrain.talonL.getSelectedSensorPosition());
     SmartDashboard.putNumber("PositionR", m_driveTrain.talonR.getSelectedSensorPosition());
-    SmartDashboard.putNumber("VelocityL", m_driveTrain.talonL.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("VelocityR", m_driveTrain.talonR.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Speed", (m_driveTrain.talonL.getSelectedSensorVelocity() + m_driveTrain.talonR.getSelectedSensorVelocity())/2.0);
     SmartDashboard.putNumber("Gyro", m_driveTrain.getAngle());
-    SmartDashboard.putNumber("Lift", m_lift.talon.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Arm", m_arm.getPos());
-    SmartDashboard.putNumber("StickPOV", OI.stick.getPOV());
+    SmartDashboard.putNumber("LiftPos", m_lift.talon.getSelectedSensorPosition());
+    SmartDashboard.putNumber("ArmPos", m_arm.getPos());
+    SmartDashboard.putNumber("Resistance", m_driveTrain.getResistance());
   }
 
   /**
@@ -145,5 +151,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    
   }
 }

@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
 public class shift extends Command {
-  private boolean state; //true for speed gear, false for torque gear
+  private boolean state; //true for speed gear1, false for torque gear2
 
   public shift(boolean state) {
-    requires(Robot.m_pneumatics);
+    requires(Robot.m_shifter);
     this.state = state;
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
@@ -29,17 +29,17 @@ public class shift extends Command {
   @Override
   protected void execute() {
     if (state) {
-      Robot.m_pneumatics.extendShifter();
+      Robot.m_shifter.gear1();
     }
     else {
-      Robot.m_pneumatics.retractShifter();
+      Robot.m_shifter.gear2();
     }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return true;
   }
 
   // Called once after isFinished returns true

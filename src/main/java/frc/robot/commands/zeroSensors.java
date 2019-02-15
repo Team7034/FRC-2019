@@ -20,7 +20,6 @@ public class zeroSensors extends Command {
   @Override
   protected void initialize() {
     Robot.m_driveTrain.zero();
-    Robot.m_lift.zero();
   }
 
   // Called repeatedly when this Command is scheduled to run

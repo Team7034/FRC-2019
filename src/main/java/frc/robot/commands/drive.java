@@ -18,7 +18,6 @@ public class drive extends Command {
     public drive() {
     	super("drive");
         requires(Robot.m_driveTrain);
-        requires(Robot.m_pneumatics);
         //Zeroes drive encoders
     	//Robot.m_driveTrain.talonL.getSensorCollection().setQuadraturePosition(0, 30);
     	//Robot.m_driveTrain.talonR.getSensorCollection().setQuadraturePosition(0, 30);
@@ -26,7 +25,6 @@ public class drive extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        Robot.m_pneumatics.extendShifter();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -39,12 +37,11 @@ public class drive extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return !(Math.abs(driveX) > 0.01 || Math.abs(driveY) > 0.01);
+        return true; //!(Math.abs(driveX) > 0.01 || Math.abs(driveY) > 0.01);
     }
 
     // Called once after isFinished returns true
     protected void end() { 
-        Robot.m_driveTrain.drive(0, 0);
     }
 
     // Called when another command which requires one or more of the same

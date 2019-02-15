@@ -15,19 +15,21 @@ package frc.robot;
  */
 public class RobotMap {
   //talonSRX
-	public static final int driveL1 = 3;
-  public static final int driveL2 = 0;
-  public static final int driveL3 = 1;
+	public static final int driveL1 = 0;
+  public static final int driveL2 = 1;
+  public static final int driveL3 = 2;
 
-  public static final int driveR1 = 4;
-  public static final int driveR2 = 2;
+  public static final int driveR1 = 3;
+  public static final int driveR2 = 4;
   public static final int driveR3 = 5;
 
-  public static final int liftL = 6;
-  public static final int liftR = 7;
+ public static final int intakeL = 6;
+  public static final int intakeR = 7;
+  
+  public static final int liftL = 8;
+  public static final int liftR = 9;
 
-  public static final int intakeL = 8;
-  public static final int intakeR = 9;
+ 
 
 
 
@@ -41,8 +43,9 @@ public class RobotMap {
 
   //pneumatics
   public static final int compressor = 0;
-  public static final int[] shifterL = {0, 1};
-  public static final int[] shifterR = {2, 3};
+  public static final int[] shifter = {0, 1};
+  public static final int[] claw = {4, 5};
+
   
   
   

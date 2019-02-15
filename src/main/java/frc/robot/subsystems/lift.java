@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -26,18 +27,22 @@ public class lift extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
-    talon = new WPI_TalonSRX(RobotMap.liftL); //main left motor
-    talon2 = new WPI_TalonSRX(RobotMap.liftR);
+    talon = new WPI_TalonSRX(RobotMap.liftR); //main left motor
+    talon2 = new WPI_TalonSRX(RobotMap.liftL);
     
     talon2.follow(talon);
 
+    talon.setInverted(InvertType.InvertMotorOutput);
+    talon2.setInverted(InvertType.InvertMotorOutput);
+
     talon.setSensorPhase(true);
+    talon.config_kP(0, 0.1);
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   }
 
   public void run(double power) {
-    talon.set(-power);
+    talon.set(power);
   }
 
   public void zero() {
@@ -48,6 +53,7 @@ public class lift extends Subsystem {
     return talon.getSelectedSensorPosition();
   }
 
+  //Mechanical range is 2930000 encoder ticks
   public void setTarget(int target) {
     talon.set(ControlMode.Position, target);
   }

@@ -24,13 +24,13 @@ import frc.robot.commands.*;
  */
 public class Robot extends TimedRobot {
   public static OI m_oi;
-  public static arm m_arm = new arm();
+  //public static arm m_arm = new arm();
   public static driveTrain m_driveTrain = new driveTrain();
-  public static lift m_lift = new lift();
+  //public static lift m_lift = new lift();
   public static shifter m_shifter = new shifter();
-  public static claw m_claw = new claw();
+  //public static claw m_claw = new claw();
 
-  //public static LaunchPadListener listener = new LaunchPadListener();
+  public static DashboardListener listener = new DashboardListener();
 
 
   Command m_autonomousCommand;
@@ -49,7 +49,12 @@ public class Robot extends TimedRobot {
     //chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
     SmartDashboard.putString("Path Name", "simple");
-    new LaunchPadListener();
+    //new LaunchPadListener();
+    SmartDashboard.putBoolean("automatic", false);
+    SmartDashboard.putBoolean("highGear", true);
+    SmartDashboard.putBoolean("foreward", true);
+    SmartDashboard.putNumber("xPos", 0);
+    SmartDashboard.putNumber("yPos", 0);
   }
 
   /**
@@ -125,7 +130,7 @@ public class Robot extends TimedRobot {
     }
     //Scheduler.getInstance().add(new moveArm());
     //Scheduler.getInstance().add(new moveLift());
-    //listener.run();
+    listener.run();
   }
 
   /**
@@ -141,8 +146,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("PositionR", m_driveTrain.talonR.getSelectedSensorPosition());
     SmartDashboard.putNumber("Speed", (m_driveTrain.talonL.getSelectedSensorVelocity() + m_driveTrain.talonR.getSelectedSensorVelocity())/2.0);
     SmartDashboard.putNumber("Gyro", m_driveTrain.getAngle());
-    SmartDashboard.putNumber("LiftPos", m_lift.talon.getSelectedSensorPosition());
-    SmartDashboard.putNumber("ArmPos", m_arm.getPos());
+    SmartDashboard.putBoolean("RobotAuto", auto);
+    //SmartDashboard.putNumber("LiftPos", m_lift.talon.getSelectedSensorPosition());
+    //SmartDashboard.putNumber("ArmPos", m_arm.getPos());
     SmartDashboard.putNumber("Resistance", m_driveTrain.getResistance());
   }
 

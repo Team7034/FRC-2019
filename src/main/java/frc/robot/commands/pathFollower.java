@@ -26,7 +26,7 @@ public class pathFollower extends Command {
 
 	private String pathName = "";
 
-	private Notifier follower;
+	private Notifier follower = new Notifier(this::followPath);
 
 	public static int x;
 	public static int y;
@@ -34,6 +34,7 @@ public class pathFollower extends Command {
     public pathFollower(int newX, int newY) {
     	super("pathFollower");
 		requires(Robot.m_driveTrain);
+		this.pathName = getPosName(x, y) + "-" + getPosName(newX, newY);
 	}
 	public pathFollower(String pathName) {
     	super("pathFollower");
@@ -61,10 +62,8 @@ public class pathFollower extends Command {
 		left.configurePIDVA(P, I, D, 1 / max_velocity, A);
 		right.configurePIDVA(P, I, D, 1 / max_velocity, A);
 
-		//Creates and starts the notifier
-		follower = new Notifier(this::followPath);
+		//Starts the notifier
 		follower.startPeriodic(lTrajectory.get(0).dt);
-		
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -80,6 +79,7 @@ public class pathFollower extends Command {
     // Called once after isFinished returns true
     protected void end() {
 		follower.stop();
+		Robot.auto = false;
     }
 
     // Called when another command which requires one or more of the same
@@ -88,6 +88,7 @@ public class pathFollower extends Command {
 		follower.stop();
 		Robot.m_driveTrain.talonL.set(0);
 		Robot.m_driveTrain.talonR.set(0);
+		Robot.auto = false;
 	}
 
 	private void followPath() {
@@ -107,6 +108,31 @@ public class pathFollower extends Command {
 		Robot.m_driveTrain.talonR.set(-right_speed + turn);
 			
     	//SmartDashboard.putNumber("VelocityR", Robot.m_driveTrain.talonR.getSelectedSensorVelocity());
+	}
+
+	private static String getPosName(int xPos, int yPos) {
+		switch(xPos) {
+			case 0: 
+				if(yPos >= 1) {
+					return "rktL" + yPos;
+				}
+				else {
+					return "lsL";
+				}
+			case 1:
+				return "csL" + (yPos+1);
+			case 2:
+				return "csR" + (yPos+1);
+			case 3:
+				if(yPos >= 1) {
+					return "rktR" + yPos;
+				}
+				else {
+					return "lsR";
+				}
+			default: 
+				return "";
+		}
 	}
 }
 

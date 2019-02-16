@@ -37,13 +37,14 @@ public class OI {
   Button joyB12 = new JoystickButton(stick, 12);
   
 
-  Button gamepadB = new JoystickButton(gamepad, 2);
-  Button gamepadA = new JoystickButton(gamepad, 1);
+  //Button gamepadB = new JoystickButton(gamepad, 2);
+  //Button gamepadA = new JoystickButton(gamepad, 1);
 
   public OI() {
     joyTrigger.whenPressed(new shift(false));
     joyTrigger.whenReleased(new shift(true));
     joyB2.whenPressed(new reverse());
+    /*
     joyB3.whenPressed(new grab(true));
     joyB4.whenPressed(new grab(false));
 
@@ -51,9 +52,9 @@ public class OI {
     joyB7.whenPressed(new runIntake(-1));
     joyB8.whenPressed(new runIntake(1));
     joyB8.whenReleased(new runIntake(0));
-
+    */
     joyB11.whenPressed(new zeroSensors());
-    joyB12.whenPressed(new pathFollower(SmartDashboard.getString("Testing Path", "simple")));
+    //joyB12.whenPressed(new pathFollower(SmartDashboard.getString("Testing Path", "simple")));
   }
   //// CREATING BUTTONS
   // One type of button is a joystick button which is any button on a

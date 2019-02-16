@@ -15,9 +15,9 @@ import edu.wpi.first.networktables.TableEntryListener;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.*;
 
-public class LaunchPadListener {
+public class DashboardListener {
     public static void main(String[] args) {
-        new LaunchPadListener().run();
+        new DashboardListener().run();
     }
 
     public void run() {
@@ -44,12 +44,21 @@ public class LaunchPadListener {
             Robot.m_driveTrain.reversed = !forward.getBoolean(true);
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
+        //These might start 2 pathFollower commands, use a subtable to fix
         x.addListener(event -> {
+            /*
             (new pathFollower((int) x.getDouble(0), (int) y.getDouble(0))).start();
+            Robot.auto = true;
+            */
+            System.out.println("X Changed");
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         y.addListener(event -> {
+            /*
             (new pathFollower((int) x.getDouble(0), (int) y.getDouble(0))).start();
+            Robot.auto = true;
+            */
+            System.out.println("Y Changed");
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         try {

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.*;
 
 /**
@@ -52,7 +53,7 @@ public class OI {
     joyB8.whenReleased(new runIntake(0));
 
     joyB11.whenPressed(new zeroSensors());
-    joyB12.whenPressed(new pathFollower());
+    joyB12.whenPressed(new pathFollower(SmartDashboard.getString("Testing Path", "simple")));
   }
   //// CREATING BUTTONS
   // One type of button is a joystick button which is any button on a

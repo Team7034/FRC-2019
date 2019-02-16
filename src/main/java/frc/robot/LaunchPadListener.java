@@ -13,6 +13,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.TableEntryListener;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.*;
 
 public class LaunchPadListener {
     public static void main(String[] args) {
@@ -21,17 +22,41 @@ public class LaunchPadListener {
 
     public void run() {
         NetworkTableInstance inst = NetworkTableInstance.getDefault();
-        NetworkTableEntry drivingSwitch = SmartDashboard.getEntry("Path Name");
+        NetworkTableEntry automatic = SmartDashboard.getEntry("automatic");
+        NetworkTableEntry gear = SmartDashboard.getEntry("highGear");
+        NetworkTableEntry forward = SmartDashboard.getEntry("forward");
+        NetworkTableEntry x = SmartDashboard.getEntry("xPos");
+        NetworkTableEntry y = SmartDashboard.getEntry("yPos");
+
+
+
         inst.startClientTeam(7034);
-        drivingSwitch.addListener(event -> {
-            //Robot.drivable = true;
+        
+        automatic.addListener(event -> {
+            Robot.auto = automatic.getBoolean(false);
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+        gear.addListener(event -> {
+            (new shift(gear.getBoolean(true))).start();
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+        forward.addListener(event -> {
+            Robot.m_driveTrain.reversed = !forward.getBoolean(true);
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+        x.addListener(event -> {
+            (new pathFollower((int) x.getDouble(0), (int) y.getDouble(0))).start();
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+        y.addListener(event -> {
+            (new pathFollower((int) x.getDouble(0), (int) y.getDouble(0))).start();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         try {
             Thread.sleep(20);
         }
         catch (InterruptedException ex) {
-            System.out.println("interrupted!");
+            System.out.println("Listener interrupted!");
             return;
         }
     }

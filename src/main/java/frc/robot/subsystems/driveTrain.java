@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -35,7 +36,7 @@ public class driveTrain extends Subsystem {
 	public static final double TICKS_PER_REV = 3600.0;
 	public static final double MAX_SPEED = 7000;
 
-	private boolean reversed = false;
+	public boolean reversed = false;
 
     public void initDefaultCommand() {
     	//Drive TalonSRX's
@@ -62,7 +63,7 @@ public class driveTrain extends Subsystem {
 		}
     
         //leftPID = new PIDController(.039,1E-8,0.095,0, gyro, talonL);
-        //rightPID = new PIDController(.039,1E-8,0.095,0, gyro, talonR);
+		//rightPID = new PIDController(.039,1E-8,0.095,0, gyro, talonR);
     }
     
     public void drive(double speed, double rot) {

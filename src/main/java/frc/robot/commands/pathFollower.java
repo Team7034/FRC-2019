@@ -27,12 +27,18 @@ public class pathFollower extends Command {
 	private String pathName = "";
 
 	private Notifier follower;
+
+	public static int x;
+	public static int y;
 	
-    public pathFollower() {
+    public pathFollower(int newX, int newY) {
     	super("pathFollower");
 		requires(Robot.m_driveTrain);
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
+	}
+	public pathFollower(String pathName) {
+    	super("pathFollower");
+		requires(Robot.m_driveTrain);
+		this.pathName = pathName;
     }
 
     // Called just before this Command runs the first time

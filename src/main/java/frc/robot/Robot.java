@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-  public boolean drivable = true;
+  public static boolean auto = false;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -45,11 +45,11 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_oi = new OI();
-    m_chooser.setDefaultOption("Default Auto", new pathFollower());
+    m_chooser.setDefaultOption("Default Auto", new pathFollower("simple"));
     //chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
     SmartDashboard.putString("Path Name", "simple");
-    //new LaunchPadListener();
+    new LaunchPadListener();
   }
 
   /**
@@ -133,7 +133,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    if(drivable) {
+    if(!auto) {
       Scheduler.getInstance().add(new drive());
     }
     Scheduler.getInstance().run();

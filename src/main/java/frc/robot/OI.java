@@ -44,17 +44,22 @@ public class OI {
     joyTrigger.whenPressed(new shift(false));
     joyTrigger.whenReleased(new shift(true));
     joyB2.whenPressed(new reverse());
+
+    joyB3.whenPressed(new habLiftPistons(true, true));
+    joyB4.whenPressed(new habLiftPistons(true, false));
+    joyB5.whenPressed(new habLiftPistons(false, true));
+    joyB6.whenPressed(new habLiftPistons(false, false));
     /*
     joyB3.whenPressed(new grab(true));
     joyB4.whenPressed(new grab(false));
-
+    
     joyB7.whenReleased(new runIntake(0));
     joyB7.whenPressed(new runIntake(-1));
     joyB8.whenPressed(new runIntake(1));
     joyB8.whenReleased(new runIntake(0));
     */
     joyB11.whenPressed(new zeroSensors());
-    //joyB12.whenPressed(new pathFollower(SmartDashboard.getString("Testing Path", "simple")));
+    joyB12.whenPressed(new pathFollower(SmartDashboard.getString("Testing Path", "simple")));
   }
   //// CREATING BUTTONS
   // One type of button is a joystick button which is any button on a
@@ -95,16 +100,9 @@ public class OI {
   }
 
   public double getRightX() {
-    if(Math.abs(gamepad.getRX()) > 0.05) {
-      return gamepad.getRX();
-    }
-    return 0;
+    return gamepad.getRX();
   }
   public double getLeftY() {
-    if(Math.abs(gamepad.getLY()) > 0.05) {
-      return gamepad.getLY();
-    }
-    return 0;
+    return gamepad.getLY();
   }
-  
 }

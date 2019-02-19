@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import frc.robot.Robot;
+import frc.robot.subsystems.driveTrain;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import jaci.pathfinder.Pathfinder;
@@ -11,6 +12,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class pathFollower extends Command {
+	private driveTrain dt = Robot.m_driveTrain;
+
 	EncoderFollower left;
 	EncoderFollower right;
 	
@@ -19,26 +22,36 @@ public class pathFollower extends Command {
 	private final double max_velocity = 1;
 	private final int TICKS_PER_REV = 18000;
 	
-	private final double P = 1;
-	private final double I = 0;
-	private final double D = 0.1;
-	private final double A = 0;
+	public static double P = 1;
+	public static double I = 0;
+	public static double D = 0;
+	public static double A = 0;
 
 	private String pathName = "";
 
 	private Notifier follower = new Notifier(this::followPath);
 
-	public static int x;
-	public static int y;
+	public static int[] location = new int[]{0, 0};
+	private int[] destination;
+	//flip is for reusing paths for the rightside loading station (not reverse)
+	private boolean flip = false;
 	
     public pathFollower(int newX, int newY) {
     	super("pathFollower");
 		requires(Robot.m_driveTrain);
-		this.pathName = getPosName(x, y) + "-" + getPosName(newX, newY);
+		flip = false;
+		String loc = getPosName(location[0], location[1]);
+		pathName = loc + getPosName(newX, newY);
+		if (loc == "") {
+			pathName += "-";
+		}
+		destination = new int[]{newX, newY};
 	}
 	public pathFollower(String pathName) {
     	super("pathFollower");
 		requires(Robot.m_driveTrain);
+		Robot.auto = true;
+		flip = SmartDashboard.getBoolean("Flip", false);
 		this.pathName = pathName;
     }
 
@@ -51,14 +64,18 @@ public class pathFollower extends Command {
 		Trajectory rTrajectory = PathfinderFRC.getTrajectory(pathName + ".right");
 		
 		//Creates objects to follow the trajectories
-    	left = new EncoderFollower(lTrajectory);
-		right = new EncoderFollower(rTrajectory);
+		if (flip) {
+			left = new EncoderFollower(rTrajectory);
+			right = new EncoderFollower(lTrajectory);
+		}
+		else {
+    		left = new EncoderFollower(lTrajectory);
+			right = new EncoderFollower(rTrajectory);
+		}
 		
-		
-
 		//Configures EncoderFollowers
-		left.configureEncoder(Robot.m_driveTrain.talonL.getSelectedSensorPosition(), TICKS_PER_REV, wheel_diameter);
-		right.configureEncoder(-Robot.m_driveTrain.talonR.getSelectedSensorPosition(), TICKS_PER_REV, wheel_diameter);
+		left.configureEncoder(dt.getEncPosL(), TICKS_PER_REV, wheel_diameter);
+		right.configureEncoder(dt.getEncPosR(), TICKS_PER_REV, wheel_diameter);
 		left.configurePIDVA(P, I, D, 1 / max_velocity, A);
 		right.configurePIDVA(P, I, D, 1 / max_velocity, A);
 
@@ -80,45 +97,46 @@ public class pathFollower extends Command {
     protected void end() {
 		follower.stop();
 		Robot.auto = false;
+		location = destination;
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
 		follower.stop();
-		Robot.m_driveTrain.talonL.set(0);
-		Robot.m_driveTrain.talonR.set(0);
+		dt.pathDrive(0, 0);
 		Robot.auto = false;
 	}
 
 	private void followPath() {
-		double left_speed = left.calculate(Robot.m_driveTrain.talonL.getSelectedSensorPosition());
-		double right_speed = right.calculate(-Robot.m_driveTrain.talonR.getSelectedSensorPosition());
+		double left_speed = left.calculate(dt.getEncPosL());
+		double right_speed = right.calculate(dt.getEncPosR());
 		double desired_heading = Pathfinder.r2d(left.getHeading());
 		double heading;
 		try {
 			heading = Robot.m_driveTrain.getAngle();
-		} 
+		}
 		catch(NullPointerException e) {
 			heading = desired_heading;
 		}
 		double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
-		double turn =  -0.01 * heading_difference;
-		Robot.m_driveTrain.talonL.set(left_speed + turn);
-		Robot.m_driveTrain.talonR.set(-right_speed + turn);
-			
-    	//SmartDashboard.putNumber("VelocityR", Robot.m_driveTrain.talonR.getSelectedSensorVelocity());
+		double turn;
+		if (flip) {
+			turn = 0.01 * heading_difference;
+		}
+		else {
+			turn = -0.01 * heading_difference;
+		}
+		Robot.m_driveTrain.pathDrive(left_speed + turn, -right_speed + turn);
 	}
 
-	private static String getPosName(int xPos, int yPos) {
+	private String getPosName(int xPos, int yPos) {
 		switch(xPos) {
 			case 0: 
 				if(yPos >= 1) {
 					return "rktL" + yPos;
 				}
-				else {
-					return "lsL";
-				}
+				return "";
 			case 1:
 				return "csL" + (yPos+1);
 			case 2:
@@ -128,7 +146,8 @@ public class pathFollower extends Command {
 					return "rktR" + yPos;
 				}
 				else {
-					return "lsR";
+					flip = true;
+					return "";
 				}
 			default: 
 				return "";

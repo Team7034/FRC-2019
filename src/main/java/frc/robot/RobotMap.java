@@ -23,19 +23,19 @@ public class RobotMap {
   public static final int driveR2 = 4;
   public static final int driveR3 = 5;
 
- public static final int intakeL = 6;
+  public static final int intakeL = 6;
   public static final int intakeR = 7;
   
   public static final int liftL = 8;
   public static final int liftR = 9;
 
- 
+  public static final int habLift = 10;
+  public static final int habLift2 = 11;
 
-
-
-  //sparks
+  //SparkMaxs
   public static final int armL = 0;
   public static final int armR = 1;
+
 
   //controllers
   public static final int joystick = 0;
@@ -43,8 +43,11 @@ public class RobotMap {
 
   //pneumatics
   public static final int compressor = 0;
-  public static final int[] shifter = {0, 1};
-  public static final int[] claw = {4, 5};
+  public static final int[] habLiftBack = {0, 1};
+  public static final int[] habLiftFront = {2, 3};
+  public static final int shifter = 4;
+  public static final int claw = 5;
+  
 
   
   

@@ -9,7 +9,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 
@@ -19,13 +19,13 @@ import frc.robot.RobotMap;
 public class claw extends Subsystem {
   public WPI_TalonSRX talon;
   public WPI_TalonSRX talon2;
-  public DoubleSolenoid claw;
+  public Solenoid claw;
 
   @Override
   public void initDefaultCommand() {
     talon = new WPI_TalonSRX(RobotMap.intakeL);
     talon2 = new WPI_TalonSRX(RobotMap.intakeR);
-    claw = new DoubleSolenoid(RobotMap.claw[0], RobotMap.claw[1]);
+    claw = new Solenoid(RobotMap.claw);
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   }
@@ -37,10 +37,10 @@ public class claw extends Subsystem {
 
   public void grab(Boolean state) {
     if (state) {
-      claw.set(DoubleSolenoid.Value.kForward);
+      claw.set(true);
     }
     else {
-      claw.set(DoubleSolenoid.Value.kReverse);
+      claw.set(false);
     }
   }
 }

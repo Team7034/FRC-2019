@@ -18,9 +18,6 @@ public class drive extends Command {
     public drive() {
     	super("drive");
         requires(Robot.m_driveTrain);
-        //Zeroes drive encoders
-    	//Robot.m_driveTrain.talonL.getSensorCollection().setQuadraturePosition(0, 30);
-    	//Robot.m_driveTrain.talonR.getSensorCollection().setQuadraturePosition(0, 30);
     }
 
     // Called just before this Command runs the first time
@@ -37,7 +34,7 @@ public class drive extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return true; //!(Math.abs(driveX) > 0.01 || Math.abs(driveY) > 0.01);
+        return true;
     }
 
     // Called once after isFinished returns true

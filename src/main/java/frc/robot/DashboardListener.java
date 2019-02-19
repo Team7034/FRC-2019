@@ -41,7 +41,7 @@ public class DashboardListener {
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         forward.addListener(event -> {
-            Robot.m_driveTrain.reversed = !forward.getBoolean(true);
+            Robot.m_driveTrain.setReversed(!forward.getBoolean(true));
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         //These might start 2 pathFollower commands, use a subtable to fix

@@ -22,68 +22,97 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class driveTrain extends Subsystem {
 
-    private DifferentialDrive robot;
-    public WPI_TalonSRX talonL;
-	public WPI_TalonSRX talonL2;
-	public WPI_TalonSRX talonL3;
-	public WPI_TalonSRX talonR;
-	public WPI_TalonSRX talonR2;
-	public WPI_TalonSRX talonR3;
-    private Timer timer;
+    private DifferentialDrive diffDrive;
+    private WPI_TalonSRX talonL;
+	private WPI_TalonSRX talonL2;
+	private WPI_TalonSRX talonL3;
+	private WPI_TalonSRX talonR;
+	private WPI_TalonSRX talonR2;
+	private WPI_TalonSRX talonR3;
+	public WPI_TalonSRX leftDrive;
+	public WPI_TalonSRX rightDrive;
     private AHRS gyro;
     
     public static final double TICKS_PER_IN = 170.0;
 	public static final double TICKS_PER_REV = 3600.0;
 	public static final double MAX_SPEED = 7000;
 
-	public boolean reversed = false;
+	private boolean reversed;
 
     public void initDefaultCommand() {
     	//Drive TalonSRX's
     	talonL = new WPI_TalonSRX(RobotMap.driveL1); //main left motor
 		talonL2 = new WPI_TalonSRX(RobotMap.driveL2);
 		talonL3 = new WPI_TalonSRX(RobotMap.driveL3);
-    	talonR = new WPI_TalonSRX(RobotMap.driveR1); //main right motor
-		talonR2 = new WPI_TalonSRX(RobotMap.driveR2);
-		talonR3 = new WPI_TalonSRX(RobotMap.driveR3);
 		talonL2.follow(talonL);
 		talonL3.follow(talonL);
+		
+		talonR = new WPI_TalonSRX(RobotMap.driveR1); //main right motor
+		talonR2 = new WPI_TalonSRX(RobotMap.driveR2);
+		talonR3 = new WPI_TalonSRX(RobotMap.driveR3);
 		talonR2.follow(talonR);
 		talonR3.follow(talonR);
 		
-    	talonL.setSelectedSensorPosition(0);
-		talonR.setSelectedSensorPosition(0);
-    	
-    	robot = new DifferentialDrive(talonL, talonR);
-        
+		//Intitializes reversed, rightDrive, leftDrive, robot
+		setReversed(false);
+		
+		//Initializes gyro
         try {
 			gyro = new AHRS(SPI.Port.kMXP);
 		} catch(RuntimeException e) {
 			DriverStation.reportError("Error Instantiating the NavX Micro: " + e.getMessage(), true);
 		}
-    
+
+    	//Sets encoders and gyro to zero
+		zero();
+
         //leftPID = new PIDController(.039,1E-8,0.095,0, gyro, talonL);
 		//rightPID = new PIDController(.039,1E-8,0.095,0, gyro, talonR);
     }
     
     public void drive(double speed, double rot) {
-		if (reversed) {
-			robot.arcadeDrive(speed, -rot);
-		}
-		else {
-			robot.arcadeDrive(-speed, -rot);
-		}	
+		diffDrive.arcadeDrive(-speed, -rot);
 	}
 
-	public void toggleReverse() {
-		reversed = !reversed;
+	public void pathDrive(double leftPercentage, double rightPercentage) {
+		leftDrive.set(leftPercentage);
+		rightDrive.set(rightPercentage);
+	}
+
+	public int getEncPosL() {
+		return leftDrive.getSelectedSensorPosition();
+	}
+
+	public int getEncPosR() {
+		return -rightDrive.getSelectedSensorPosition();
+	}
+
+	public double getSpeed() {
+		return (leftDrive.getSelectedSensorVelocity() - rightDrive.getSelectedSensorVelocity())/2.0;
+	}
+
+	public void setReversed(boolean reversed) {
+		this.reversed = reversed;
+		if (this.reversed) {
+			leftDrive = talonR;
+			rightDrive = talonL;
+		}
+		else {
+			leftDrive = talonL;
+			rightDrive = talonR;
+		}
+		diffDrive = new DifferentialDrive(leftDrive, rightDrive);
+	}
+
+	public boolean getReversed() {
+		return reversed;
 	}
     
     public void setTarget(int targetL, int targetR) {
-		talonL.set(ControlMode.PercentOutput, 0);
-    	talonR.set(ControlMode.PercentOutput, 0);
-    	talonL.set(ControlMode.Position, targetL);
-    	talonR.set(ControlMode.Position, -targetR);
+		leftDrive.set(ControlMode.PercentOutput, 0);
+    	rightDrive.set(ControlMode.PercentOutput, 0);
+    	leftDrive.set(ControlMode.Position, targetL);
+    	rightDrive.set(ControlMode.Position, -targetR);
 	}
 	
 	public double getAngle() {
@@ -91,14 +120,14 @@ public class driveTrain extends Subsystem {
 	}
 
 	public void zero() {
-		talonL.setSelectedSensorPosition(0);
-		talonR.setSelectedSensorPosition(0);
+		leftDrive.setSelectedSensorPosition(0);
+		rightDrive.setSelectedSensorPosition(0);
 		gyro.zeroYaw();
 	}
 
 	public double getResistance() {
-		double resistanceL = Math.abs(MAX_SPEED*talonL.getMotorOutputPercent()/talonL.getSelectedSensorVelocity());
-		double resistanceR = Math.abs(MAX_SPEED*talonR.getMotorOutputPercent()/talonR.getSelectedSensorVelocity());
+		double resistanceL = Math.abs(MAX_SPEED*leftDrive.getMotorOutputPercent()/leftDrive.getSelectedSensorVelocity());
+		double resistanceR = Math.abs(MAX_SPEED*rightDrive.getMotorOutputPercent()/rightDrive.getSelectedSensorVelocity());
 		return (resistanceL + resistanceR)/2;
 	}
 }

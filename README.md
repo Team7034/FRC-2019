@@ -20,7 +20,7 @@ This is the source of these steps
 
 Make sure to always download in http://frcvision.local/ 
 with the raspberry pi powered and connected to the device using ethernet or Radio
-- go to the application tab
-- change the file type to a custom python code
-- switch over to the writable mode
-- add the chicken vision file and save it
+1. go to the application tab
+2. change the file type to a custom python code
+3. switch over to the writable mode
+4. add the chicken vision file and save it

@@ -10,3 +10,13 @@ How to install CScore:
 If These steps don't work or if you don't have Robotpy-installer
 go to https://robotpy.readthedocs.io/en/stable/install/cscore.html and follow the steps posted there
 This is the source of these steps
+
+
+Our initial goals:
+- [] have everyone clone our version of chicken vision
+- [] test all the angles and the yaw values given from chicken vision
+  - [] the values work (line 20)
+  - [] the values didn't work (line ?)
+
+working value goals:
+- [] start to incorrporate the working values to the final code

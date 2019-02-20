@@ -1,4 +1,11 @@
 # FRC-2019
+Software engineering goals:
+- [ ] Step 1: Look into all options of vision sensing
+- [ ] Step 2: Decide what code would be best for our intrests
+- [ ] Step 3: Integrate with our robot code
+- [ ] Step 4: Recognize the target and location
+- [ ] Step 5: Build tracking algorithim
+- [ ] Step 6: Have it follow the markers / actually run it
 
 How to install CScore:
 - Step 1: Make sure you have Robotpy-installer on the device
@@ -10,13 +17,3 @@ How to install CScore:
 If These steps don't work or if you don't have Robotpy-installer
 go to https://robotpy.readthedocs.io/en/stable/install/cscore.html and follow the steps posted there
 This is the source of these steps
-
-
-Our initial goals:
-- [ ] have everyone clone our version of chicken vision
-- [ ] test all the angles and the yaw values given from chicken vision
-  - [ ] the values work (line 20)
-  - [ ] the values didn't work (line ?)
-
-working value goals:
-- [ ] start to incorrporate the working values to the final code

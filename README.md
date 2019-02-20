@@ -17,3 +17,10 @@ How to install CScore:
 If These steps don't work or if you don't have Robotpy-installer
 go to https://robotpy.readthedocs.io/en/stable/install/cscore.html and follow the steps posted there
 This is the source of these steps
+
+Make sure to always download in http://frcvision.local/ 
+with the raspberry pi powered and connected to the device using ethernet or Radio
+- go to the application tab
+- change the file type to a custom python code
+- switch over to the writable mode
+- add the chicken vision file and save it

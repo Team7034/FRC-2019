@@ -2,6 +2,9 @@ package frc.robot.commands;
 
 import frc.robot.Robot;
 import frc.robot.subsystems.driveTrain;
+
+import java.io.File;
+
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import jaci.pathfinder.Pathfinder;
@@ -27,7 +30,7 @@ public class pathFollower extends Command {
 	public static double D = 0;
 	public static double A = 0;
 
-	private String pathName = "";
+	private String pathName = "simple";
 
 	private Notifier follower = new Notifier(this::followPath);
 
@@ -38,7 +41,7 @@ public class pathFollower extends Command {
 	
     public pathFollower(int newX, int newY) {
     	super("pathFollower");
-		requires(Robot.m_driveTrain);
+		//requires(Robot.m_driveTrain);
 		flip = false;
 		String loc = getPosName(location[0], location[1]);
 		pathName = loc + getPosName(newX, newY);
@@ -49,7 +52,7 @@ public class pathFollower extends Command {
 	}
 	public pathFollower(String pathName) {
     	super("pathFollower");
-		requires(Robot.m_driveTrain);
+		//requires(Robot.m_driveTrain);
 		Robot.auto = true;
 		flip = SmartDashboard.getBoolean("Flip", false);
 		this.pathName = pathName;
@@ -57,11 +60,19 @@ public class pathFollower extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-		pathName = SmartDashboard.getString("Path Name", "simple");
+		
 
-		//Generates left and right trajectories from csv files on the roboRIO
+		//Generates left and right trajectories from csv files on the roboRIO 
+		//DOES NOT WORK WITH LATEST VERSION OF PATHFINDER, USE 2019.1.12
 		Trajectory lTrajectory = PathfinderFRC.getTrajectory(pathName + ".left");
 		Trajectory rTrajectory = PathfinderFRC.getTrajectory(pathName + ".right");
+	
+		/*
+		File fileL = PathfinderFRC.getTrajectoryFile(pathName + ".left");
+		File fileR = PathfinderFRC.getTrajectoryFile(pathName + ".right");
+		Trajectory lTrajectory = Pathfinder.readFromCSV(fileL);
+		Trajectory rTrajectory = Pathfinder.readFromCSV(fileR);
+		*/
 		
 		//Creates objects to follow the trajectories
 		if (flip) {
@@ -113,12 +124,15 @@ public class pathFollower extends Command {
 		double right_speed = right.calculate(dt.getEncPosR());
 		double desired_heading = Pathfinder.r2d(left.getHeading());
 		double heading;
+		/*
 		try {
-			heading = Robot.m_driveTrain.getAngle();
+			heading = dt.getAngle();
 		}
 		catch(NullPointerException e) {
 			heading = desired_heading;
 		}
+		*/
+		heading = desired_heading;
 		double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
 		double turn;
 		if (flip) {
@@ -127,7 +141,8 @@ public class pathFollower extends Command {
 		else {
 			turn = -0.01 * heading_difference;
 		}
-		Robot.m_driveTrain.pathDrive(left_speed + turn, -right_speed + turn);
+		dt.pathDrive(left_speed + turn, -right_speed + turn);
+		System.out.println(pathName);
 	}
 
 	private String getPosName(int xPos, int yPos) {

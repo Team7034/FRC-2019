@@ -14,22 +14,21 @@ import frc.robot.Robot;
 public class moveLift extends Command {
   private int target;
   public moveLift() {
-    requires(Robot.m_lift);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    target = Robot.m_lift.getPos();
+    target = Robot.m_arm.getLiftPos();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
     target += Robot.m_oi.getLeftY()*15000;
-    Robot.m_lift.setTarget(target);
-    SmartDashboard.putNumber("LiftPos", Robot.m_lift.getPos());
-    SmartDashboard.putNumber("LiftPower", Robot.m_lift.talon.getMotorOutputPercent());
+    Robot.m_lift.setLiftTarget(target);
+    SmartDashboard.putNumber("LiftPos", Robot.m_lift.getLiftPos());
+    SmartDashboard.putNumber("LiftPower", Robot.m_lift.lift.getMotorOutputPercent());
   }
 
   // Make this return true when this Command no longer needs to run execute()

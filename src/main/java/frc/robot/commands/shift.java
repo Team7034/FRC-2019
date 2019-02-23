@@ -11,11 +11,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
 public class shift extends Command {
-  private boolean state; //true for speed gear1, false for torque gear2
 
-  public shift(boolean state) {
-    requires(Robot.m_shifter);
-    this.state = state;
+  public shift() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -28,12 +25,7 @@ public class shift extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (state) {
-      Robot.m_shifter.gear1();
-    }
-    else {
-      Robot.m_shifter.gear2();
-    }
+    Robot.m_driveTrain.toggleGear();
   }
 
   // Make this return true when this Command no longer needs to run execute()

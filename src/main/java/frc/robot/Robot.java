@@ -26,10 +26,8 @@ public class Robot extends TimedRobot {
   public static OI m_oi;
   //public static arm m_arm = new arm();
   public static driveTrain m_driveTrain = new driveTrain();
-  //public static lift m_lift = new lift();
-  public static shifter m_shifter = new shifter();
   //public static claw m_claw = new claw();
-  public static habLift m_habLift = new habLift();
+  //public static habLift m_habLift = new habLift();
 
   public static DashboardListener listener = new DashboardListener();
 
@@ -49,7 +47,7 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", new pathFollower("simple"));
     //chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
-    SmartDashboard.putString("Testing Path", "simple");
+    SmartDashboard.putString("TestingPath", "simple");
     //new LaunchPadListener();
     SmartDashboard.putBoolean("automatic", false);
     SmartDashboard.putBoolean("highGear", true);
@@ -145,7 +143,7 @@ public class Robot extends TimedRobot {
     }
     Scheduler.getInstance().run();
     SmartDashboard.putNumber("PositionL", m_driveTrain.getEncPosL());
-    SmartDashboard.putNumber("PositionR", m_driveTrain.getEncPosL());
+    SmartDashboard.putNumber("PositionR", m_driveTrain.getEncPosR());
     SmartDashboard.putNumber("Speed", m_driveTrain.getSpeed());
     SmartDashboard.putNumber("Gyro", m_driveTrain.getAngle());
     //SmartDashboard.putNumber("LiftPos", m_lift.talon.getSelectedSensorPosition());

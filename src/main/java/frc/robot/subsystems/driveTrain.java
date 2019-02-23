@@ -1,21 +1,19 @@
 package frc.robot.subsystems;
 
-import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-
-
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -31,13 +29,18 @@ public class driveTrain extends Subsystem {
 	private WPI_TalonSRX talonR3;
 	public WPI_TalonSRX leftDrive;
 	public WPI_TalonSRX rightDrive;
-    private AHRS gyro;
+	private AHRS gyro;
+	
+	//private Solenoid shifter;
+	private DoubleSolenoid shifter;
+	Compressor comp;
     
     public static final double TICKS_PER_IN = 170.0;
 	public static final double TICKS_PER_REV = 3600.0;
 	public static final double MAX_SPEED = 7000;
 
 	private boolean reversed;
+	private int gear;
 
     public void initDefaultCommand() {
     	//Drive TalonSRX's
@@ -52,9 +55,34 @@ public class driveTrain extends Subsystem {
 		talonR3 = new WPI_TalonSRX(RobotMap.driveR3);
 		talonR2.follow(talonR);
 		talonR3.follow(talonR);
-		
+
+		talonL.setNeutralMode(NeutralMode.Brake);
+		talonL2.setNeutralMode(NeutralMode.Brake);
+		talonL3.setNeutralMode(NeutralMode.Brake);
+		talonR.setNeutralMode(NeutralMode.Brake);
+		talonR2.setNeutralMode(NeutralMode.Brake);
+		talonR3.setNeutralMode(NeutralMode.Brake);
+
+		talonL.setSafetyEnabled(false);
+		talonL2.setSafetyEnabled(false);
+		talonL3.setSafetyEnabled(false);
+		talonR.setSafetyEnabled(false);
+		talonR2.setSafetyEnabled(false);
+		talonR3.setSafetyEnabled(false);
+
+		talonL.setExpiration(0.5);
+		talonL2.setExpiration(0.5);
+		talonL3.setExpiration(0.5);
+		talonR.setExpiration(0.5);
+		talonR2.setExpiration(0.5);
+		talonR3.setExpiration(0.5);
 		//Intitializes reversed, rightDrive, leftDrive, robot
 		setReversed(false);
+		diffDrive = new DifferentialDrive(talonL, talonR);
+
+		//shifter = new Solenoid(RobotMap.shifterCB);
+		shifter = new DoubleSolenoid(RobotMap.shifterPB[0], RobotMap.shifterPB[1]);
+		comp = new Compressor(RobotMap.compressor);
 		
 		//Initializes gyro
         try {
@@ -71,7 +99,13 @@ public class driveTrain extends Subsystem {
     }
     
     public void drive(double speed, double rot) {
-		diffDrive.arcadeDrive(-speed, -rot);
+		if (!reversed) {
+			diffDrive.arcadeDrive(-speed, -rot);
+		}
+		else {
+			diffDrive.arcadeDrive(speed, -rot);
+		}
+		
 	}
 
 	public void pathDrive(double leftPercentage, double rightPercentage) {
@@ -101,7 +135,6 @@ public class driveTrain extends Subsystem {
 			leftDrive = talonL;
 			rightDrive = talonR;
 		}
-		diffDrive = new DifferentialDrive(leftDrive, rightDrive);
 	}
 
 	public boolean getReversed() {
@@ -129,6 +162,27 @@ public class driveTrain extends Subsystem {
 		double resistanceL = Math.abs(MAX_SPEED*leftDrive.getMotorOutputPercent()/leftDrive.getSelectedSensorVelocity());
 		double resistanceR = Math.abs(MAX_SPEED*rightDrive.getMotorOutputPercent()/rightDrive.getSelectedSensorVelocity());
 		return (resistanceL + resistanceR)/2;
+	}
+
+	public void compressorOn(boolean on) {
+    	comp.setClosedLoopControl(on);
+    }
+    public void gear2() {
+		//shifter.set(true);
+		shifter.set(Value.kReverse);
+    }
+    public void gear1() {
+		//shifter.set(false);
+		shifter.set(Value.kForward);
+	}
+	public void toggleGear() {
+		if (shifter.get() == Value.kForward) {
+			gear2();
+		}
+		else {
+			gear1();
+		}
+		
 	}
 }
 

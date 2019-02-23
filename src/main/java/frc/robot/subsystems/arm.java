@@ -7,60 +7,91 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.ControlType;
-import com.revrobotics.CANSparkMaxLowLevel.ConfigParameter;
 
 /**
  * Add your docs here.
  */
 public class arm extends Subsystem {
-  public CANSparkMax neo;
-  public CANSparkMax neo2;
+  public CANSparkMax arm;
+  public CANSparkMax arm2;
+  public WPI_TalonSRX lift;
+  public WPI_TalonSRX lift2;
 
 
-  CANPIDController controller;
+  CANPIDController armPID;
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
   @Override
   public void initDefaultCommand() {
-    neo = new CANSparkMax(RobotMap.armL, CANSparkMaxLowLevel.MotorType.kBrushless);
-    neo2 = new CANSparkMax(RobotMap.armR, CANSparkMaxLowLevel.MotorType.kBrushless);
+    arm = new CANSparkMax(RobotMap.armL, CANSparkMaxLowLevel.MotorType.kBrushless);
+    arm2 = new CANSparkMax(RobotMap.armR, CANSparkMaxLowLevel.MotorType.kBrushless);
     
 
     //followers
-    neo2.follow(neo, true);
+    arm2.follow(arm, true);
 
 
-    controller = neo.getPIDController();
+    armPID = arm.getPIDController();
 
-    controller.setP(1);
-    controller.setOutputRange(-.15, .15);
+    armPID.setP(1);
+    armPID.setOutputRange(-.15, .15);
 
-    neo.set(0);
+    arm.set(0);
+
+    lift = new WPI_TalonSRX(RobotMap.liftR); //main left motor
+    lift2 = new WPI_TalonSRX(RobotMap.liftL);
+    
+    lift2.follow(lift);
+
+    lift.setInverted(InvertType.InvertMotorOutput);
+    lift2.setInverted(InvertType.InvertMotorOutput);
+
+    lift.setSensorPhase(true);
+    lift.config_kP(0, 0.1);
+
+    
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   }
 
-  public void run(double speed) {
-    neo.set(speed);
+  public void runLift(double power) {
+    lift.set(power);
   }
 
-  public double getPos() {
-    return neo.getEncoder().getPosition();
+  public void zeroLiftEnc() {
+    lift.setSelectedSensorPosition(0);
+  }
+
+  public int getLiftPos() {
+    return lift.getSelectedSensorPosition();
+  }
+
+  //Mechanical range is 2930000 encoder ticks
+  public void setLiftTarget(int target) {
+    lift.set(ControlMode.Position, target);
+  }
+
+  public void runArm(double speed) {
+    arm.set(speed);
+  }
+
+  public double getArmPos() {
+    return arm.getEncoder().getPosition();
   }
 
   //Mechanical range is 39 revolutions (encoder ticks)
-  public void setTarget(double target) {
-    controller.setReference(target, ControlType.kPosition);
+  public void setArmTarget(double target) {
+    armPID.setReference(target, ControlType.kPosition);
   }
 }

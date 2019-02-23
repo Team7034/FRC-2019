@@ -37,7 +37,13 @@ public class DashboardListener {
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         gear.addListener(event -> {
-            (new shift(gear.getBoolean(true))).start();
+            if (gear.getBoolean(true)) {
+                Robot.m_driveTrain.gear1();
+            }
+            else {
+                Robot.m_driveTrain.gear2();
+            }
+            
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         forward.addListener(event -> {

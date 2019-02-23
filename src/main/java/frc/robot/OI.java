@@ -7,11 +7,7 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GamepadBase;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.GenericHID.HIDType;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -41,15 +37,14 @@ public class OI {
   //Button gamepadA = new JoystickButton(gamepad, 1);
 
   public OI() {
-    joyTrigger.whenPressed(new shift(false));
-    joyTrigger.whenReleased(new shift(true));
+    joyTrigger.whenPressed(new shift());
     joyB2.whenPressed(new reverse());
-
+    /*
     joyB3.whenPressed(new habLiftPistons(true, true));
     joyB4.whenPressed(new habLiftPistons(true, false));
     joyB5.whenPressed(new habLiftPistons(false, true));
     joyB6.whenPressed(new habLiftPistons(false, false));
-    /*
+    
     joyB3.whenPressed(new grab(true));
     joyB4.whenPressed(new grab(false));
     
@@ -59,7 +54,8 @@ public class OI {
     joyB8.whenReleased(new runIntake(0));
     */
     joyB11.whenPressed(new zeroSensors());
-    joyB12.whenPressed(new pathFollower(SmartDashboard.getString("Testing Path", "simple")));
+    //joyB12.whenPressed(new pathFollower(SmartDashboard.getString("TestingPath", "simple")));
+    
   }
   //// CREATING BUTTONS
   // One type of button is a joystick button which is any button on a

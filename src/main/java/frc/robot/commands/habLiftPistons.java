@@ -4,7 +4,7 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
+/*
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -14,13 +14,13 @@ import frc.robot.subsystems.habLift;
 public class habLiftPistons extends Command {
   private boolean side;
   private boolean state;
-  private habLift inst;
+  private habLift hl;
   public habLiftPistons(boolean side, boolean state) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     this.side = side;
     this.state = state;
-    inst = Robot.m_habLift;
+    hl = Robot.m_habLift;
   }
 
   // Called just before this Command runs the first time
@@ -28,18 +28,18 @@ public class habLiftPistons extends Command {
   protected void initialize() {
     if (side) {
       if (state) {
-        inst.extendFront();
+        hl.extendFront();
       }
       else {
-        inst.retractFront();
+        hl.retractFront();
       }
     }
     else {
       if (state) {
-        inst.extendBack();
+        hl.extendBack();
       }
       else {
-        inst.retractBack();
+        hl.retractBack();
       }
     }
   }
@@ -66,3 +66,4 @@ public class habLiftPistons extends Command {
   protected void interrupted() {
   }
 }
+*/

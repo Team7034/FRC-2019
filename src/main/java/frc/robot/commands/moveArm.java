@@ -15,7 +15,6 @@ import frc.robot.Robot;
 public class moveArm extends Command {
   public double target;
   public moveArm() {
-    requires(Robot.m_arm);
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -31,9 +30,9 @@ public class moveArm extends Command {
   protected void execute() {
     target += Robot.m_oi.getRightX()/5;
 
-    Robot.m_arm.setTarget(target);
+    Robot.m_arm.setArmTarget(target);
     SmartDashboard.putNumber("ArmTarget", target);
-    SmartDashboard.putNumber("ArmPower", Robot.m_arm.neo.getAppliedOutput());
+    SmartDashboard.putNumber("ArmPower", Robot.m_arm.arm.getAppliedOutput());
   }
 
   // Make this return true when this Command no longer needs to run execute()

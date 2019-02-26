@@ -1,3 +1,7 @@
 Files placed in this directory will be deployed to the RoboRIO into the
+<<<<<<< HEAD
 'deploy' directory in the home folder. Use the 'Filesystem.getDeployDirectory' wpilib function
+=======
+'deploy' directory in the home folder. Use the 'FileUtilities.getFilePath' wpilib function
+>>>>>>> 473299e12e5f0e5777e11e8a92a088de9d1cb5f8
 to get a proper path relative to the deploy directory.

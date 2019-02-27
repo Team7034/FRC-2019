@@ -7,21 +7,14 @@
 
 package frc.robot;
 
-<<<<<<< HEAD
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-=======
-import edu.wpi.first.wpilibj.TimedRobot;
->>>>>>> 473299e12e5f0e5777e11e8a92a088de9d1cb5f8
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-<<<<<<< HEAD
-import frc.robot.commands.Drive;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.AutomaticArm;
 import frc.robot.commands.ManualArm;
 import frc.robot.subsystems.Arm;
@@ -29,25 +22,8 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LED;
-=======
-import frc.robot.subsystems.driveTrain;
-import frc.robot.subsystems.pneumatics;
-import frc.robot.subsystems.arm;
-import frc.robot.commands.drive;
-import frc.robot.commands.mainAuto;
-import frc.robot.commands.moveArm;
->>>>>>> 473299e12e5f0e5777e11e8a92a088de9d1cb5f8
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the TimedRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the build.gradle file in the
- * project.
- */
-public class Robot extends TimedRobot {
-<<<<<<< HEAD
-  public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
+public class Robot extends TimedRobot{
   public static Arm m_arm = new Arm();
   public static Intake m_intake = new Intake();
   public static DriveTrain m_drive_train = new DriveTrain();
@@ -57,12 +33,6 @@ public class Robot extends TimedRobot {
   public static boolean arm_forward = true;
   public AHRS arm_gyro;
   private Alliance team = Alliance.Invalid;
-=======
-  public static OI m_oi;
-  public static driveTrain m_driveTrain = new driveTrain();
-  public static pneumatics m_pneumatics = new pneumatics();
-  public static arm m_arm = new arm();
->>>>>>> 473299e12e5f0e5777e11e8a92a088de9d1cb5f8
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -73,20 +43,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-<<<<<<< HEAD
     team = m_ds.getAlliance();
     m_led = new LED(team);
     m_oi = new OI();
-    m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
+    //m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
     //arm_gyro = new AHRS(Port.kUSB1);
-=======
-    m_oi = new OI();
-    m_chooser.setDefaultOption("Default Auto", new mainAuto());
-    //chooser.addOption("My Auto", new MyAutoCommand());
-    SmartDashboard.putData("Auto mode", m_chooser);
->>>>>>> 473299e12e5f0e5777e11e8a92a088de9d1cb5f8
   }
 
   /**
@@ -113,13 +76,10 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     Scheduler.getInstance().run();
-<<<<<<< HEAD
     if(team == Alliance.Invalid){
       team = m_ds.getAlliance();
       m_led.updateAlliance(team);
     }
-=======
->>>>>>> 473299e12e5f0e5777e11e8a92a088de9d1cb5f8
   }
 
   /**
@@ -167,12 +127,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-<<<<<<< HEAD
-    
-=======
-    Scheduler.getInstance().add(new drive());
-    Scheduler.getInstance().add(new moveArm());
->>>>>>> 473299e12e5f0e5777e11e8a92a088de9d1cb5f8
+    // Scheduler.getInstance().add(new drive());
+    // Scheduler.getInstance().add(new moveArm());
   }
 
   /**
@@ -180,7 +136,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-<<<<<<< HEAD
     Scheduler.getInstance().add(new ManualArm());
     //Scheduler.getInstance().add(new Drive());
     /*if(Robot.m_oi.cont.getDPAD("left")){
@@ -198,14 +153,6 @@ public class Robot extends TimedRobot {
     }else{
       m_intake.stop_intake();
     }*/
-=======
-    Scheduler.getInstance().run();
-    SmartDashboard.putNumber("PositionL", m_driveTrain.talonL.getSelectedSensorPosition());
-    SmartDashboard.putNumber("PositionR", m_driveTrain.talonR.getSelectedSensorPosition());
-    SmartDashboard.putNumber("VelocityL", m_driveTrain.talonL.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("VelocityR", m_driveTrain.talonR.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("Gyro", m_driveTrain.getAngle());
->>>>>>> 473299e12e5f0e5777e11e8a92a088de9d1cb5f8
   }
 
   /**

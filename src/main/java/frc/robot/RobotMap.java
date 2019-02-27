@@ -21,7 +21,10 @@ public class RobotMap {
   public static int driveR1 = 3;
   public static int driveR2 = 4;
   public static int driveR3 = 5;
-  public static int shifter = 4;
+  public static int shifterL1 = 0;
+  public static int shifterL2 = 1;
+  public static int shifterR1 = 6;
+  public static int shifterR2 = 7;
 
   //arm subsystem
   public static int elevator1 = 8;

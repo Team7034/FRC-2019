@@ -10,7 +10,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-<<<<<<< HEAD
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.IntakeOpen;
@@ -20,31 +19,12 @@ import frc.robot.commands.AutomaticArm;
 import frc.robot.commands.Shift;
 import frc.robot.commands.Reverse;
 import frc.robot.subsystems.Arm;
-=======
-import frc.robot.commands.*;
->>>>>>> 473299e12e5f0e5777e11e8a92a088de9d1cb5f8
 
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-<<<<<<< HEAD
-=======
-  public Button joyTrigger = new JoystickButton(stick, 1);
-  public Button joyB3 = new JoystickButton(stick, 3);
-  public Button joyB4 = new JoystickButton(stick, 4);
-  public Button joyB5 = new JoystickButton(stick, 5);
-  public Button joyB6 = new JoystickButton(stick, 6);
-  public Button joyB7 = new JoystickButton(stick, 7);
-
-  static Joystick stick = new Joystick(RobotMap.joystick); //LogitechX3D
-
-  public OI() {
-    joyTrigger.whenPressed(new shift(false));
-    joyTrigger.whenReleased(new shift(true));
-  }
->>>>>>> 473299e12e5f0e5777e11e8a92a088de9d1cb5f8
   //// CREATING BUTTONS
   // One type of button is a joystick button which is any button on a
   //// joystick.
@@ -73,7 +53,6 @@ public class OI {
   // until it is finished as determined by it's isFinished method.
   // button.whenReleased(new ExampleCommand());
 
-<<<<<<< HEAD
   public static Controller cont = new Controller(RobotMap.gamepad);
   static Joystick stick = new Joystick(RobotMap.joystick);
 
@@ -129,16 +108,4 @@ public class OI {
     return stick.getX();
   }
 
-=======
-  public double getDriveY() {
-    return stick.getY();
-  }
-  public double getDriveX() {
-    return stick.getX();
-  }
-  public double getSlider() {
-    return stick.getThrottle();
-  }
-  
->>>>>>> 473299e12e5f0e5777e11e8a92a088de9d1cb5f8
 }

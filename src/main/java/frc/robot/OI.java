@@ -28,7 +28,8 @@ public class OI {
   Button joyB6 = new JoystickButton(stick, 6);
   Button joyB7 = new JoystickButton(stick, 7);
   Button joyB8 = new JoystickButton(stick, 8);
-
+  Button joyB9 = new JoystickButton(stick, 9);
+  Button joyB10 = new JoystickButton(stick, 10);
   Button joyB11 = new JoystickButton(stick, 11);
   Button joyB12 = new JoystickButton(stick, 12);
   
@@ -53,9 +54,11 @@ public class OI {
     joyB8.whenPressed(new runIntake(1));
     joyB8.whenReleased(new runIntake(0));
     */
+    joyB9.whenPressed(new grab(true));
+    joyB9.whenReleased(new grab(false));
+
     joyB11.whenPressed(new zeroSensors());
-    //joyB12.whenPressed(new pathFollower(SmartDashboard.getString("TestingPath", "simple")));
-    
+    joyB12.whenPressed(new pathFollower("-simple"));
   }
   //// CREATING BUTTONS
   // One type of button is a joystick button which is any button on a

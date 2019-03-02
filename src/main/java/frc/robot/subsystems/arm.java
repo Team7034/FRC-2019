@@ -37,7 +37,6 @@ public class arm extends Subsystem {
     arm = new CANSparkMax(RobotMap.armL, CANSparkMaxLowLevel.MotorType.kBrushless);
     arm2 = new CANSparkMax(RobotMap.armR, CANSparkMaxLowLevel.MotorType.kBrushless);
     
-
     //followers
     arm2.follow(arm, true);
 

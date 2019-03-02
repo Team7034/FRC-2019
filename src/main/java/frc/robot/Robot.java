@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
   public static OI m_oi;
   //public static arm m_arm = new arm();
   public static driveTrain m_driveTrain = new driveTrain();
-  //public static claw m_claw = new claw();
+  public static claw m_claw = new claw();
   //public static habLift m_habLift = new habLift();
 
   public static DashboardListener listener = new DashboardListener();
@@ -35,8 +35,6 @@ public class Robot extends TimedRobot {
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-  public static boolean auto;
-
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -44,16 +42,19 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_oi = new OI();
-    m_chooser.setDefaultOption("Default Auto", new pathFollower("simple"));
+    m_chooser.setDefaultOption("Default Auto", new pathFollower("-simple"));
     //chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
-    SmartDashboard.putString("TestingPath", "simple");
+    SmartDashboard.putString("Testing Path", "simple");
     //new LaunchPadListener();
     SmartDashboard.putBoolean("automatic", false);
     SmartDashboard.putBoolean("highGear", true);
     SmartDashboard.putBoolean("forward", true);
-    SmartDashboard.putNumber("xPos", 0);
-    SmartDashboard.putNumber("yPos", 0);
+    SmartDashboard.putNumber("Path P", pathFollower.kP);
+    SmartDashboard.putNumber("Path I", pathFollower.kI);
+    SmartDashboard.putNumber("Path D", pathFollower.kD);
+    SmartDashboard.putNumber("Path A", pathFollower.kA);
+    
   }
 
   /**
@@ -129,8 +130,8 @@ public class Robot extends TimedRobot {
     }
     //Scheduler.getInstance().add(new moveArm());
     //Scheduler.getInstance().add(new moveLift());
+    //Scheduler.getInstance().add(new autoShifter());
     listener.run();
-    auto = false;
   }
 
   /**
@@ -138,9 +139,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    if(!auto) {
+    if (!m_driveTrain.auto) {
       Scheduler.getInstance().add(new drive());
     }
+    
     Scheduler.getInstance().run();
     SmartDashboard.putNumber("PositionL", m_driveTrain.getEncPosL());
     SmartDashboard.putNumber("PositionR", m_driveTrain.getEncPosR());
@@ -149,6 +151,9 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putNumber("LiftPos", m_lift.talon.getSelectedSensorPosition());
     //SmartDashboard.putNumber("ArmPos", m_arm.getPos());
     SmartDashboard.putNumber("Resistance", m_driveTrain.getResistance());
+    SmartDashboard.putBoolean("Auto", m_driveTrain.auto);
+    SmartDashboard.putNumber("Robot x", m_driveTrain.xPos);
+    SmartDashboard.putNumber("Robot y", m_driveTrain.yPos);
   }
 
   /**

@@ -25,15 +25,14 @@ public class DashboardListener {
         NetworkTableEntry automatic = SmartDashboard.getEntry("automatic");
         NetworkTableEntry gear = SmartDashboard.getEntry("highGear");
         NetworkTableEntry forward = SmartDashboard.getEntry("forward");
-        NetworkTableEntry x = SmartDashboard.getEntry("xPos");
-        NetworkTableEntry y = SmartDashboard.getEntry("yPos");
+        NetworkTableEntry xy = SmartDashboard.getEntry("pos_table");
 
 
 
         inst.startClientTeam(7034);
         
         automatic.addListener(event -> {
-            Robot.auto = automatic.getBoolean(false);
+            Robot.m_driveTrain.auto = automatic.getBoolean(false);
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         gear.addListener(event -> {
@@ -50,20 +49,9 @@ public class DashboardListener {
             Robot.m_driveTrain.setReversed(!forward.getBoolean(true));
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
-        //These might start 2 pathFollower commands, use a subtable to fix
-        x.addListener(event -> {
-            /*
-            (new pathFollower((int) x.getDouble(0), (int) y.getDouble(0))).start();
-            Robot.auto = true;
-            */
-            System.out.println("X Changed");
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
-        y.addListener(event -> {
-            /*
-            (new pathFollower((int) x.getDouble(0), (int) y.getDouble(0))).start();
-            Robot.auto = true;
-            */
+        xy.addListener(event -> {
+            (new pathFollower(Robot.m_driveTrain.findPath((int) xy.getNumberArray(new Number[]{0, 0})[0], (int) xy.getNumberArray(new Number[]{0, 0})[1]))).start();
+            
             System.out.println("Y Changed");
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 

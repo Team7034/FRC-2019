@@ -31,16 +31,18 @@ public class driveTrain extends Subsystem {
 	public WPI_TalonSRX rightDrive;
 	private AHRS gyro;
 	
-	//private Solenoid shifter;
-	private DoubleSolenoid shifter;
+	private Solenoid shifter;
+	//private DoubleSolenoid shifter;
 	Compressor comp;
     
-    public static final double TICKS_PER_IN = 170.0;
-	public static final double TICKS_PER_REV = 3600.0;
-	public static final double MAX_SPEED = 7000;
+	public static final double MAX_SPEED = 10000;
+	public static final int TICKS_PER_METER = 55100;
 
 	private boolean reversed;
 	private int gear;
+	public boolean auto;
+	public int xPos = 0;
+	public int yPos = 0;
 
     public void initDefaultCommand() {
     	//Drive TalonSRX's
@@ -63,25 +65,14 @@ public class driveTrain extends Subsystem {
 		talonR2.setNeutralMode(NeutralMode.Brake);
 		talonR3.setNeutralMode(NeutralMode.Brake);
 
-		talonL.setSafetyEnabled(false);
-		talonL2.setSafetyEnabled(false);
-		talonL3.setSafetyEnabled(false);
-		talonR.setSafetyEnabled(false);
-		talonR2.setSafetyEnabled(false);
-		talonR3.setSafetyEnabled(false);
+		auto = false;
 
-		talonL.setExpiration(0.5);
-		talonL2.setExpiration(0.5);
-		talonL3.setExpiration(0.5);
-		talonR.setExpiration(0.5);
-		talonR2.setExpiration(0.5);
-		talonR3.setExpiration(0.5);
 		//Intitializes reversed, rightDrive, leftDrive, robot
-		setReversed(false);
+		setReversed(true);
 		diffDrive = new DifferentialDrive(talonL, talonR);
 
-		//shifter = new Solenoid(RobotMap.shifterCB);
-		shifter = new DoubleSolenoid(RobotMap.shifterPB[0], RobotMap.shifterPB[1]);
+		shifter = new Solenoid(RobotMap.shifterCB);
+		//shifter = new DoubleSolenoid(RobotMap.shifterPB[0], RobotMap.shifterPB[1]);
 		comp = new Compressor(RobotMap.compressor);
 		
 		//Initializes gyro
@@ -105,12 +96,16 @@ public class driveTrain extends Subsystem {
 		else {
 			diffDrive.arcadeDrive(speed, -rot);
 		}
-		
 	}
 
-	public void pathDrive(double leftPercentage, double rightPercentage) {
-		leftDrive.set(leftPercentage);
-		rightDrive.set(rightPercentage);
+	public void pathDrive(double leftSpeed, double rightSpeed) {
+		if (!reversed) {
+			diffDrive.tankDrive(leftSpeed, -rightSpeed);
+		}
+		else {
+			diffDrive.tankDrive(rightSpeed, -leftSpeed);
+		}
+		
 	}
 
 	public int getEncPosL() {
@@ -164,25 +159,103 @@ public class driveTrain extends Subsystem {
 		return (resistanceL + resistanceR)/2;
 	}
 
+	public double getVelocity() {
+		return (rightDrive.getSelectedSensorVelocity()-leftDrive.getSelectedSensorVelocity())/.1/2/TICKS_PER_METER;
+	}
+	public double getThrottle() {
+		return (rightDrive.getMotorOutputPercent()-leftDrive.getMotorOutputPercent())/2;
+	}
+	public double getCurrentDraw() {
+		return (rightDrive.getOutputCurrent()+leftDrive.getOutputCurrent())/2;
+	}
+
 	public void compressorOn(boolean on) {
     	comp.setClosedLoopControl(on);
     }
     public void gear2() {
-		//shifter.set(true);
-		shifter.set(Value.kReverse);
+		if (!shifter.get()) {
+			shifter.set(true);
+		}
+		/*	
+		if (shifter.get() != Value.kReverse) {
+			shifter.set(Value.kReverse);
+		}
+		*/
     }
     public void gear1() {
-		//shifter.set(false);
-		shifter.set(Value.kForward);
+		if (shifter.get()) {
+			shifter.set(false);
+		}
+		/*
+		if (shifter.get() != Value.kForward) {
+			shifter.set(Value.kForward);
+		}
+		*/
 	}
 	public void toggleGear() {
+		/*
 		if (shifter.get() == Value.kForward) {
+			gear2();
+		}
+		*/
+		if (!shifter.get()) {
 			gear2();
 		}
 		else {
 			gear1();
 		}
 		
+	}
+
+	//returns instructions for which path to follow
+	public String findPath(int x, int y) {
+		String flip = "-";
+		int number = 0;
+		String direction = "-";
+		if (x == 0 && y == 0) {
+			//flip = "-";
+			direction = "+";
+			number = xPos * 4 + yPos;
+		}
+		else if (x == 3 && y == 0) {
+			flip = "+";
+			direction = "+";
+			number = (3-xPos) * 4 + yPos;
+		}
+		else if (xPos == 3 && yPos == 0) {
+			flip = "+";
+			//direction = "-";
+			number = (3-x) * 4 + y;
+		}
+		else if (xPos == 0 && yPos == 0) {
+			//flip = "-";
+			//direction = "-";
+			number = x * 4 + y;
+		}
+		switch(number) {
+			//0: Left loading station
+			case 1: return flip + "rktC1" + direction;
+			case 2: return flip + "rktC2" + direction;
+			case 3: return flip + "rktC3" + direction;
+			case 4: return flip + "csC1" + direction;
+			case 5: return flip + "csC2" + direction;
+			case 6: return flip + "csC3" + direction;
+			case 7: return flip + "csC4" + direction;
+			case 8: return flip + "csF1" + direction;
+			case 9: return flip + "csF2" + direction;
+			case 10: return flip + "csF3" + direction;
+			case 11: return flip + "csF4" + direction;
+			//12: Right loading station
+			case 13: return flip + "rktF1" + direction;
+			case 14: return flip + "rktF2" + direction;
+			case 15: return flip + "rktF3" + direction;
+			default: return "-simple";
+		}
+	}
+
+	public void setLocation(int x, int y) {
+		xPos = x;
+		yPos = y;
 	}
 }
 

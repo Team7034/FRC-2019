@@ -4,6 +4,7 @@ import frc.robot.Robot;
 import frc.robot.subsystems.driveTrain;
 
 import java.io.File;
+import java.io.IOException;
 
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
@@ -21,59 +22,69 @@ public class pathFollower extends Command {
 	EncoderFollower right;
 	
 	//Wheel base width = 0.646
-	private final double wheel_diameter = 0.1;
-	private final double max_velocity = 1;
+	private final double wheel_diameter = 0.104;
+	private final double max_velocity = 2.5;
 	private final int TICKS_PER_REV = 18000;
 	
-	public static double P = 1;
-	public static double I = 0;
-	public static double D = 0;
-	public static double A = 0;
+	public static double kP = 5;
+	public static double kI = 0;
+	public static double kD = 0.1;
+	public static double kA = 0;
+	public static double kG = 0.8 * (-1.0/80.0);
 
-	private String pathName = "simple";
+	private double offset;
+
+	public String pathName = "simple";
 
 	private Notifier follower = new Notifier(this::followPath);
 
-	public static int[] location = new int[]{0, 0};
-	private int[] destination;
 	//flip is for reusing paths for the rightside loading station (not reverse)
-	private boolean flip = false;
+	public boolean flip;
 	
-    public pathFollower(int newX, int newY) {
-    	super("pathFollower");
+	/*
+		+/- : involves left(-) or right(+) loading station (not part of the file name)
+		cs/rkt : involves cargo ship(cs) or rocket ship(rkt)
+		L/R : deposit area is on left(L) or right(R) side of the field
+		number : specific section of the deposit location
+		+/- : to(+) or from(-) the loading station
+	*/
+    public pathFollower(String path) {
+		super("pathFollower");
 		//requires(Robot.m_driveTrain);
-		flip = false;
-		String loc = getPosName(location[0], location[1]);
-		pathName = loc + getPosName(newX, newY);
-		if (loc == "") {
-			pathName += "-";
+		if (path.substring(0,1) == "+") {
+			flip = true;
 		}
-		destination = new int[]{newX, newY};
+		else {
+			flip = false;
+		}
+		pathName = path.substring(1);
+		try {
+			offset = dt.getAngle();
+		}
+		catch(NullPointerException e) {
+			offset = 0;
+		}
+		SmartDashboard.putString("Last Path", path);
 	}
-	public pathFollower(String pathName) {
-    	super("pathFollower");
-		//requires(Robot.m_driveTrain);
-		Robot.auto = true;
-		flip = SmartDashboard.getBoolean("Flip", false);
-		this.pathName = pathName;
-    }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-		
-
+		dt.auto = true;
+		//pathName = SmartDashboard.getString("Testing Path", "simple");
+		//flip = SmartDashboard.getBoolean("Flip", false);
+		kP = SmartDashboard.getNumber("Path P", kP);
+		kI = SmartDashboard.getNumber("Path I", kI);
+		kD = SmartDashboard.getNumber("Path D", kD);
+		kA = SmartDashboard.getNumber("Path A", kA);
 		//Generates left and right trajectories from csv files on the roboRIO 
 		//DOES NOT WORK WITH LATEST VERSION OF PATHFINDER, USE 2019.1.12
-		Trajectory lTrajectory = PathfinderFRC.getTrajectory(pathName + ".left");
-		Trajectory rTrajectory = PathfinderFRC.getTrajectory(pathName + ".right");
-	
-		/*
-		File fileL = PathfinderFRC.getTrajectoryFile(pathName + ".left");
-		File fileR = PathfinderFRC.getTrajectoryFile(pathName + ".right");
-		Trajectory lTrajectory = Pathfinder.readFromCSV(fileL);
-		Trajectory rTrajectory = Pathfinder.readFromCSV(fileR);
-		*/
+
+		Trajectory lTrajectory;
+		Trajectory rTrajectory;
+		lTrajectory = PathfinderFRC.getTrajectory("output/" + pathName + ".left");
+		rTrajectory = PathfinderFRC.getTrajectory("output/" + pathName + ".right");
 		
+
 		//Creates objects to follow the trajectories
 		if (flip) {
 			left = new EncoderFollower(rTrajectory);
@@ -87,8 +98,8 @@ public class pathFollower extends Command {
 		//Configures EncoderFollowers
 		left.configureEncoder(dt.getEncPosL(), TICKS_PER_REV, wheel_diameter);
 		right.configureEncoder(dt.getEncPosR(), TICKS_PER_REV, wheel_diameter);
-		left.configurePIDVA(P, I, D, 1 / max_velocity, A);
-		right.configurePIDVA(P, I, D, 1 / max_velocity, A);
+		left.configurePIDVA(kP, kI, kD, 1 / max_velocity, kA);
+		right.configurePIDVA(kP, kI, kD, 1 / max_velocity, kA);
 
 		//Starts the notifier
 		follower.startPeriodic(lTrajectory.get(0).dt);
@@ -107,8 +118,8 @@ public class pathFollower extends Command {
     // Called once after isFinished returns true
     protected void end() {
 		follower.stop();
-		Robot.auto = false;
-		location = destination;
+		dt.auto = false;
+		dt.setLocation((int) SmartDashboard.getNumber("xPos", 0), (int) SmartDashboard.getNumber("yPos", 0));
     }
 
     // Called when another command which requires one or more of the same
@@ -116,57 +127,33 @@ public class pathFollower extends Command {
     protected void interrupted() {
 		follower.stop();
 		dt.pathDrive(0, 0);
-		Robot.auto = false;
+		dt.auto = false;
 	}
 
 	private void followPath() {
+		System.out.println(pathName);
 		double left_speed = left.calculate(dt.getEncPosL());
 		double right_speed = right.calculate(dt.getEncPosR());
 		double desired_heading = Pathfinder.r2d(left.getHeading());
 		double heading;
-		/*
 		try {
-			heading = dt.getAngle();
+			heading = dt.getAngle() - offset;
 		}
 		catch(NullPointerException e) {
 			heading = desired_heading;
 		}
-		*/
-		heading = desired_heading;
+		//heading = desired_heading;
 		double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
 		double turn;
 		if (flip) {
-			turn = 0.01 * heading_difference;
+			turn = -kG * heading_difference;
 		}
 		else {
-			turn = -0.01 * heading_difference;
+			turn = kG * heading_difference;
 		}
 		dt.pathDrive(left_speed + turn, -right_speed + turn);
-		System.out.println(pathName);
 	}
 
-	private String getPosName(int xPos, int yPos) {
-		switch(xPos) {
-			case 0: 
-				if(yPos >= 1) {
-					return "rktL" + yPos;
-				}
-				return "";
-			case 1:
-				return "csL" + (yPos+1);
-			case 2:
-				return "csR" + (yPos+1);
-			case 3:
-				if(yPos >= 1) {
-					return "rktR" + yPos;
-				}
-				else {
-					flip = true;
-					return "";
-				}
-			default: 
-				return "";
-		}
-	}
+	
 }
 

@@ -28,6 +28,9 @@ import math
 # import the necessary packages
 import datetime
 
+class CameraNameConfigError(Exception):
+    pass
+
 #Class to examine Frames per second of camera stream. Currently not used.
 class FPS:
 	def __init__(self):
@@ -82,6 +85,95 @@ class VideoShow:
         self.stopped = True
     def notifyError(self, error):
         self.outputStream.notifyError(error)
+
+
+class VideoStreamCamCfg:
+    def __init__(self, camera, cameraServer, frameWidth, frameHeight, cam_name: str):
+        self.webcam = camera
+        self.cameraServer = cameraServer
+        self.framWidth = frameWidth
+        self.frameHeight = frameHeight
+        self.cam_name = cam_name
+        
+        # manually override the camera exposure 
+        self.webcam.setExposureManual(0)
+        
+        #Make a blank image to write on
+        self.img = np.zeros(shape=(frameWidth, frameHeight, 3), dtype=np.uint8)
+        #Gets the video
+        self.stream = cameraServer.getVideo()
+        (self.timestamp, self.img) = self.stream.grabFrame(self.img)
+
+
+class MultiCameraStream:
+    def __init__(self, front_cam_cfg: VideoStreamCamCfg, back_cam_cfg: VideoStreamCamCfg, name='WebcamVideoStream'):
+        self.front_cam_cfg = front_cam_cfg
+        self.back_cam_cfg = back_cam_cfg
+        self._current_cam = self.front_cam_cfg
+        
+        # initialize the variable used to indicate if the thread should
+        # be stopped
+        self.stopped = False
+
+        # initialize the thread name
+        self.name = name
+        
+        #Make a blank image to write on
+        self.img = np.zeros(shape=(frameWidth, frameHeight, 3), dtype=np.uint8)
+        #Gets the video
+        self.stream = cameraServer.getVideo()
+        (self.timestamp, self.img) = self.stream.grabFrame(self.img)
+        
+    def start(self):
+        # start the thread to read frames from the video stream
+        t = Thread(target=self.update, name=self.name, args=())
+        t.daemon = True
+        t.start()
+        return self
+
+    def set_camera(use_front: bool):
+        self._current_cam = self.front_cam_cfg if use_front else self.back_cam_cfg
+
+    @property
+    def current_cam(self) -> VideoStreamCamCfg:
+        self._current_cam
+          
+    def stream(self): 
+        return self.current_cam.cameraServer.stream
+
+    @property
+    def webcam(self):
+        return self.current_cam.webcam
+
+    @property
+    def timestamp(self):
+        return self.current_cam.timestamp
+
+    @property
+    def img(self):
+        return self.current_cam.img
+
+    def update(self):
+        # keep looping infinitely until the thread is stopped
+           while True:
+            # if the thread indicator variable is set, stop the thread
+            if self.stopped:
+                return
+            #gets the image and timestamp from cameraserver
+            (self.timestamp, self.img) = self.stream.grabFrame(self.img)
+        pass
+
+    def read(self):
+        # return the frame most recently read
+        return self.timestamp, self.img
+
+    def stop(self):
+        # indicate that the thread should be stopped
+        self.stopped = True
+
+    def getError(self):
+        return self.stream.getError()
+
 
 # Class that runs a separate thread for reading  camera server also controlling exposure.
 class WebcamVideoStream:
@@ -756,8 +848,26 @@ if __name__ == "__main__":
         cameras.append(cameraCapture)
     #Get the first camera
     
-    print(">>> cameras are: {}".format(cameras))
+
+    # >>> camera functions: ['ConnectionStrategy', 'Kind', 'WhiteBalance', '__class__', '__delattr__', '__dir__', '__doc__', '__eq__',
+    #  '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__le__', '__lt__', '__module__', '__ne__', '__new__',
+    #   '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'enumerateProperties', 
+    #   'enumerateSinks', 'enumerateSources', 'enumerateUsbCameras', 'enumerateVideoModes', 'getActualDataRate', 'getActualFPS', 
+    #   'getBrightness', 'getConfigJson', 'getDescription', 'getHandle', 'getInfo', 'getKind', 'getLastFrameTime', 'getLastStatus',
+    #    'getName', 'getPath', 'getProperty', 'getVideoMode', 'isConnected', 'setBrightness', 'setConfigJson', 'setConnectVerbose', 
+    #    'setConnectionStrategy', 'setExposureAuto', 'setExposureHoldCurrent', 'setExposureManual', 'setFPS', 'setPixelFormat', 'setResolution',
+    #     'setVideoMode', 'setWhiteBalanceAuto', 'setWhiteBalanceHoldCurrent', 'setWhiteBalanceManual']
     
+    for cam in cameras:
+        c_name = cam.getName()
+        print(">>> camera_name  -> {}".format(c_name))
+        if c_name == "front_cam":
+            front_cam = cam
+        elif c_name == "back_cam":
+            back_cam = cam
+        else:
+            raise CameraNameConfigError("We only support cameras named front_cam and back_cam, but this camera is named {}".format(c_name))
+
     webcam = cameras[0]
     cameraServer = streams[0]
     #Start thread reading camera
@@ -786,6 +896,8 @@ if __name__ == "__main__":
             streamViewer.notifyError(cap.getError());
             # skip the rest of the current iteration
             continue
+
+        _____.set_camera(use_front=networkTable.getBoolean("UseFrontCam", True))
 
         #Checks if you just want camera for driver (No processing), False by default
         if(networkTable.getBoolean("Driver", False)):

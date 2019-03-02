@@ -37,7 +37,7 @@ public class mainAuto extends Command {
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() {
+    protected void initialize() {	
 		Robot.m_pneumatics.retractShifter();
 
 		//Generates left and right trajectories from csv files on the roboRIO
@@ -77,16 +77,18 @@ public class mainAuto extends Command {
     	//Robot.m_driveTrain.talonL.set(l);
     	//Robot.m_driveTrain.talonR.set(r);
     }
-
-    // Make this return true when this Command no longer needs to run execute()
+	
+	// Make this return true when this Command no longer needs to run execute()
+	@Override
     protected boolean isFinished() {
-        return left.isFinished() || right.isFinished();
+	    return left.isFinished() || right.isFinished();
+	   //return true;
     }
-
+	@Override
     // Called once after isFinished returns true
     protected void end() {
     }
-
+	@Override
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
@@ -111,11 +113,12 @@ public class mainAuto extends Command {
 		  	double turn =  0.8 * (-1.0/80.0) * heading_difference;
 		  	Robot.m_driveTrain.talonL.set(left_speed + turn);
 			Robot.m_driveTrain.talonR.set(right_speed - turn);
-			//SmartDashboard.putNumber("PositionL", Robot.m_driveTrain.talonL.getSelectedSensorPosition());
-    		//SmartDashboard.putNumber("PositionR", Robot.m_driveTrain.talonR.getSelectedSensorPosition());
-    		//SmartDashboard.putNumber("VelocityL", Robot.m_driveTrain.talonL.getSelectedSensorVelocity());
-    		//SmartDashboard.putNumber("VelocityR", Robot.m_driveTrain.talonR.getSelectedSensorVelocity());
+			SmartDashboard.putNumber("PositionL", Robot.m_driveTrain.talonL.getSelectedSensorPosition());
+    		SmartDashboard.putNumber("PositionR", Robot.m_driveTrain.talonR.getSelectedSensorPosition());
+    		SmartDashboard.putNumber("VelocityL", Robot.m_driveTrain.talonL.getSelectedSensorVelocity());
+    		SmartDashboard.putNumber("VelocityR", Robot.m_driveTrain.talonR.getSelectedSensorVelocity());
 		}
-	}
-}
-
+		
+	} 
+	
+} 

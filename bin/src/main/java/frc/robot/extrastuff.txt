@@ -1,0 +1,76 @@
+/*
+    else if (sensor.grayscale < 3)
+    {
+      if (rightTurnCycles <= 50) //allows up to 50 cycles of 20ms, or 1 second, eh?
+      {
+        robot.arcadeDrive(0.2, 0.55);
+        rightTurnCycles++;
+      }
+      else if (leftTurnCycles <= 50) //75 cycles of 20ms, or 1.5 seconds
+      {
+        robot.arcadeDrive(-.2, -0.55);
+        leftTurnCycles++;
+      }
+}
+    /*
+  boolean detected = sensor.get();
+  if (detected == true)
+  {
+    System.out.println("DETECTED!!");
+
+  }
+  else
+  {
+  System.out.println("NO!!");
+  }
+  */
+    //double[] numbers = lineOutput.getOutput();
+
+    /*
+    String output = lineOutput.getOutput();
+    if (output.equals("Stop"))
+      robot.arcadeDrive(0, 0);
+    else if (output.equals("Straight"))
+      robot.arcadeDrive(.7,.7);
+    else if (output.equals("Left"))
+    {
+      robot.arcadeDrive(0.8, 0.5);
+    }
+  */
+
+  if (sensor.grayscale > 4)
+    {
+      sensor.read();
+      right_motors.set(-0.6);
+      left_motors.set(-0.6);
+    }
+    else if (sensor.grayscale > 3)
+    {
+      if (lastLeft == true)
+      {
+        right_motors.set(-0.5);
+        left_motors.set(-0.3);
+        lastLeft = false;
+      }
+      else if (lastLeft == false)
+      {
+        right_motors.set(-0.3);
+        left_motors.set(-0.5);
+        lastLeft = true;
+      }
+    }
+    else if (sensor.grayscale <=3)
+    {
+      if (lastLeft == true)
+      {
+        right_motors.set(-0.5);
+        left_motors.set(0);
+        lastLeft = false;
+      }
+      if (lastLeft == false)
+      {
+        right_motors.set(0);
+        left_motors.set(-0.5);
+        lastLeft = true;
+      }
+    }

@@ -14,7 +14,7 @@ public class shift extends Command {
   private boolean state; //true for speed gear, false for torque gear
 
   public shift(boolean state) {
-    requires(Robot.m_pneumatics);
+    //requires(Robot.m_pneumatics);
     this.state = state;
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);

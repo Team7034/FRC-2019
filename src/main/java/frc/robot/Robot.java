@@ -18,6 +18,28 @@ import frc.robot.subsystems.arm;
 import frc.robot.commands.drive;
 import frc.robot.commands.mainAuto;
 import frc.robot.commands.moveArm;
+//import frc.robot.commands.seek;
+//import frc.robot.commands.turnToAngle;
+import frc.robot.commands.rocketFinder;
+
+//import edu.wpi.first.wpilibj.PIDController;
+//import edu.wpi.first.wpilibj.PIDOutput;
+//import com.kauailabs.navx.frc.AHRS;
+
+//import edu.wpi.first.wpilibj.TimedRobot;
+//import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import javax.lang.model.util.ElementScanner6;
+
+//import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.I2C;
+//import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import java.util.*;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -35,6 +57,23 @@ public class Robot extends TimedRobot {
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+  public SpeedControllerGroup left_motors;
+  public SpeedControllerGroup right_motors;
+  
+  ColorSensor sensor;
+  
+  DifferentialDrive robot;
+  Joystick stick;
+
+  Spark front_left;
+	Spark back_left;	
+	Spark front_right;
+  Spark back_right;
+
+  Deque<String> deque;
+
+  
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -45,6 +84,8 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", new mainAuto());
     //chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
+    Scheduler.getInstance().add(new rocketFinder(0, 0));
+
   }
 
   /**
@@ -57,6 +98,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    //System.out.println(sensor.grayscale);
   }
 
   /**
@@ -70,7 +112,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    Scheduler.getInstance().run();
+    //Scheduler.getInstance().run();
   }
 
   /**
@@ -87,6 +129,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_chooser.getSelected();
+
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -120,6 +163,22 @@ public class Robot extends TimedRobot {
     }
     Scheduler.getInstance().add(new drive());
     Scheduler.getInstance().add(new moveArm());
+    
+    front_left = new Spark(0);
+		back_left = new Spark(1);
+		left_motors = new SpeedControllerGroup(front_left, back_left);
+		
+		front_right = new Spark(2);
+		back_right = new Spark(3);
+		right_motors = new SpeedControllerGroup(front_right, back_right);
+		
+		robot = new DifferentialDrive(left_motors, right_motors);
+		stick = new Joystick(0);
+    stick.setThrottleChannel(3);
+
+    sensor = new ColorSensor(I2C.Port.kOnboard);
+    deque = new LinkedList<String>();
+
   }
 
   /**
@@ -133,12 +192,63 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("VelocityL", m_driveTrain.talonL.getSelectedSensorVelocity());
     SmartDashboard.putNumber("VelocityR", m_driveTrain.talonR.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Gyro", m_driveTrain.getAngle());
+
+    double speed = -(stick.getThrottle()+1)/2;
+    robot.arcadeDrive(-stick.getY()*speed, -stick.getX()*speed);
   }
 
+
+  @Override
+  public void testInit(){
+    //Scheduler.getInstance().add(new seek(100, this, "negative"));
+
+    //double yaw = SmartDashboard.getNumber("tapeYaw", 0);
+    //Scheduler.getInstance().add(new turnToAngle(30, this));
+    //Scheduler.getInstance().add(new turnToAngle(yaw, this));
+  }
   /**
    * This function is called periodically during test mode.
    */
   @Override
   public void testPeriodic() {
+    Scheduler.getInstance().run();
+    /**
+     * power to overcome mu_s ≈ .22 (2-cim bunnybot gearbox)
+     * thus,
+     * y = mx + b where x ∈ [-1, 1] & y ∈ [-1, 1]
+     * m = 1-mu_s and b = mu_s
+     * 
+     * To find the proper power, p, based on target power, p_t,
+     * given color sensor value v such that v ∈ [0, 10]...
+     * p = v / (10 / ((p_t - b) / m)) + b
+     * 
+     * This equation was derived by...
+     * p_t = y
+     * solve for x. This is the amount of power administered when the v = 10
+     * x = 10 / k
+     * solve for k. This is what you must divide v by to find the appropriate power.
+     * 
+     * Ex. Have the left motor run at 50% power when it is fully over the line. mu_s = .22
+     * .5 = .78x + .22
+     * x = .3589
+     * .3589 = 10 / k
+     * k = 27.86
+     * left_motors.set((v/k)+.22)
+     */
+
+    
+    /*
+    sensor.read();
+    SmartDashboard.putNumber("Value", sensor.grayscale);
+    left_motors.set(-.5);
+    if(sensor.grayscale > 4){
+      right_motors.set(((sensor.grayscale-4) / 16.25) + .22);
+    }else{
+      right_motors.set(-.3);
+      
+    }
+    */
+
+    
   }
 }

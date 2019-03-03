@@ -4,15 +4,14 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-/*
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class runIntake extends Command {
+public class RunIntake extends Command {
   private double power;
-  public runIntake(double power) {
+  public RunIntake(double power) {
     this.power = power;
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
@@ -47,4 +46,3 @@ public class runIntake extends Command {
   protected void interrupted() {
   }
 }
-*/

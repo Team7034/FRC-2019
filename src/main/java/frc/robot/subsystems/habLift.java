@@ -19,7 +19,7 @@ import frc.robot.RobotMap;
 public class habLift extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private DoubleSolenoid back;
+  private DoubleSolenoid rear;
   private DoubleSolenoid front;
   private WPI_TalonSRX talon;
 
@@ -27,7 +27,7 @@ public class habLift extends Subsystem {
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
-    back = new DoubleSolenoid(RobotMap.habLiftBack[0], RobotMap.habLiftBack[1]);
+    rear = new DoubleSolenoid(RobotMap.habLiftRear[0], RobotMap.habLiftRear[1]);
     front = new DoubleSolenoid(RobotMap.habLiftFront[0], RobotMap.habLiftFront[1]);
   }
 
@@ -37,11 +37,11 @@ public class habLift extends Subsystem {
   public void retractFront() {
     front.set(DoubleSolenoid.Value.kReverse);
   }
-  public void extendBack() {
-    back.set(DoubleSolenoid.Value.kForward);
+  public void extendRear() {
+    rear.set(DoubleSolenoid.Value.kForward);
   }
-  public void retractBack() {
-    back.set(DoubleSolenoid.Value.kReverse);
+  public void retractRear() {
+    rear.set(DoubleSolenoid.Value.kReverse);
   }
 
   public void runHabLift(double value) {

@@ -19,7 +19,7 @@ import frc.robot.commands.*;
  */
 public class OI {
   static Joystick stick = new Joystick(RobotMap.joystick); //LogitechX3D
-  static Controller gamepad = new Controller(RobotMap.gamepad);
+  static Controller cont = new Controller(RobotMap.gamepad);
   Button joyTrigger = new JoystickButton(stick, 1);
   Button joyB2 = new JoystickButton(stick, 2);
   Button joyB3 = new JoystickButton(stick, 3);
@@ -32,61 +32,41 @@ public class OI {
   Button joyB10 = new JoystickButton(stick, 10);
   Button joyB11 = new JoystickButton(stick, 11);
   Button joyB12 = new JoystickButton(stick, 12);
+
+  Button mid = new JoystickButton(cont, 1);
+  Button backward = new JoystickButton(cont, 2);
+  Button forward = new JoystickButton(cont, 3);
+  Button upright = new JoystickButton(cont, 4);
+  Button open = new JoystickButton(cont, 5);
+  Button close = new JoystickButton(cont, 6);
+  Button hatchHigh = new JoystickButton(cont, 7);
+  Button arm_reverse = new JoystickButton(cont, 8);
   
 
   //Button gamepadB = new JoystickButton(gamepad, 2);
   //Button gamepadA = new JoystickButton(gamepad, 1);
 
   public OI() {
-    joyTrigger.whenPressed(new shift());
-    joyB2.whenPressed(new reverse());
-    /*
-    joyB3.whenPressed(new habLiftPistons(true, true));
-    joyB4.whenPressed(new habLiftPistons(true, false));
-    joyB5.whenPressed(new habLiftPistons(false, true));
-    joyB6.whenPressed(new habLiftPistons(false, false));
+    joyTrigger.whenPressed(new Shift());
+    joyB2.whenPressed(new Reverse());
     
-    joyB3.whenPressed(new grab(true));
-    joyB4.whenPressed(new grab(false));
+    joyB9.whenPressed(new Grab(true));
+    joyB9.whenReleased(new Grab(false));
+
+    joyB11.whenPressed(new ZeroSensors());
+    joyB12.whenPressed(new PathFollower("-simple"));
     
-    joyB7.whenReleased(new runIntake(0));
-    joyB7.whenPressed(new runIntake(-1));
-    joyB8.whenPressed(new runIntake(1));
-    joyB8.whenReleased(new runIntake(0));
+    /*upright.whenPressed(new AutomaticArm(Arm.state.get("rest")));
+    forward.whenPressed(new AutomaticArm(Arm.state.get("ballLow")));
+    backward.whenPressed(new AutomaticArm(Arm.state.get("ballHigh")));
+    mid.whenPressed(new AutomaticArm(Arm.state.get("ballMid")));
+    hatchHigh.whenPressed(new AutomaticArm(Arm.state.get("hatchHigh")));
+    arm_reverse.whenPressed(new ArmReverse());
     */
-    joyB9.whenPressed(new grab(true));
-    joyB9.whenReleased(new grab(false));
-
-    joyB11.whenPressed(new zeroSensors());
-    joyB12.whenPressed(new pathFollower("-simple"));
+    open.whenPressed(new Grab(false));
+    close.whenPressed(new Grab(true));
   }
-  //// CREATING BUTTONS
-  // One type of button is a joystick button which is any button on a
-  //// joystick.
-  // You create one by telling it which joystick it's on and which button
-  // number it is.
-  // Joystick stick = new Joystick(port);
-  // Button button = new JoystickButton(stick, buttonNumber);
-
-  // There are a few additional built in buttons you can use. Additionally,
-  // by subclassing Button you can create custom triggers and bind those to
-  // commands the same as any other Button.
-
-  //// TRIGGERING COMMANDS WITH BUTTONS
-  // Once you have a button, it's trivial to bind it to a button in one of
-  // three ways:
-
-  // Start the command when the button is pressed and let it run the command
-  // until it is finished as determined by it's isFinished method.
-  // button.whenPressed(new ExampleCommand());
-
-  // Run the command while the button is being held down and interrupt it once
-  // the button is released.
-  // button.whileHeld(new ExampleCommand());
-
-  // Start the command when the button is released and let it run the command
-  // until it is finished as determined by it's isFinished method.
-  // button.whenReleased(new ExampleCommand());
+  
 
   public double getDriveY() {
     return stick.getY();
@@ -98,10 +78,17 @@ public class OI {
     return stick.getThrottle();
   }
 
-  public double getRightX() {
-    return gamepad.getRX();
+  public double getArm(){
+    if(Math.abs(cont.getRY()) > .05){
+      return cont.getRY();
+    }
+    return 0;
   }
-  public double getLeftY() {
-    return gamepad.getLY();
+
+  public double getElevator(){
+    if(Math.abs(cont.getLY()) > .05){
+      return cont.getLY();
+    }
+    return 0;
   }
 }

@@ -4,37 +4,36 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-/*
+
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 
-public class moveLift extends Command {
+public class MoveLift extends Command {
   private int target;
-  public moveLift() {
+  private boolean finished = false;
+
+  public MoveLift(int target) {
+    this.target = target;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    target = Robot.m_arm.getLiftPos();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    target += Robot.m_oi.getLeftY()*15000;
-    Robot.m_lift.setLiftTarget(target);
-    SmartDashboard.putNumber("LiftPos", Robot.m_lift.getLiftPos());
-    SmartDashboard.putNumber("LiftPower", Robot.m_lift.lift.getMotorOutputPercent());
+    finished = Robot.m_arm.auto_ele(target);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return finished;
   }
 
   // Called once after isFinished returns true
@@ -48,4 +47,4 @@ public class moveLift extends Command {
   protected void interrupted() {
   }
 }
-*/
+

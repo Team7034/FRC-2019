@@ -1,22 +1,18 @@
 package frc.robot.commands;
 
 import frc.robot.Robot;
-import frc.robot.subsystems.driveTrain;
-
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
-public class drive extends Command {
+public class Drive extends Command {
     private double driveY;
     private double driveX;
 	//private double speedControl;
-    public drive() {
-    	super("drive");
+    public Drive() {
+    	super("Drive");
         requires(Robot.m_driveTrain);
     }
 

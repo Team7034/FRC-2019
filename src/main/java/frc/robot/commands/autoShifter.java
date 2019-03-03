@@ -12,10 +12,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.subsystems.driveTrain;
 
-public class autoShifter extends Command {
+public class AutoShifter extends Command {
   private driveTrain dt = Robot.m_driveTrain;
   private double lastV = 0;
-  public autoShifter() {
+  public AutoShifter() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -44,13 +44,14 @@ public class autoShifter extends Command {
     SmartDashboard.putNumber("Drive Acceleration", a);
     SmartDashboard.putNumber("Drive Throttle", t);
     SmartDashboard.putNumber("Drive Current", c);
-    
+    /*
     if(v > 1 && t > .8 && a > 2) {
       dt.gear1();
     }
     else if (v < 2 && t < .5 || v < 8 && t > .8 && a < -5 || v < 2 && t > .8 && c > 10) {
       dt.gear2();
     }
+    */
   }
 
   // Make this return true when this Command no longer needs to run execute()

@@ -29,7 +29,7 @@ public class driveTrain extends Subsystem {
 	private WPI_TalonSRX talonR3;
 	public WPI_TalonSRX leftDrive;
 	public WPI_TalonSRX rightDrive;
-	private AHRS gyro;
+	public AHRS gyro;
 	
 	private Solenoid shifter;
 	//private DoubleSolenoid shifter;
@@ -168,20 +168,20 @@ public class driveTrain extends Subsystem {
 	public double getCurrentDraw() {
 		return (rightDrive.getOutputCurrent()+leftDrive.getOutputCurrent())/2;
 	}
-
+	
 	public void compressorOn(boolean on) {
     	comp.setClosedLoopControl(on);
-    }
+	}
+	
     public void gear2() {
 		if (!shifter.get()) {
 			shifter.set(true);
-		}
-		/*	
-		if (shifter.get() != Value.kReverse) {
-			shifter.set(Value.kReverse);
-		}
-		*/
-    }
+		}	
+		//if (shifter.get() != Value.kReverse) {
+			//shifter.set(Value.kReverse);
+		//}
+	}
+	
     public void gear1() {
 		if (shifter.get()) {
 			shifter.set(false);
@@ -207,51 +207,7 @@ public class driveTrain extends Subsystem {
 		
 	}
 
-	//returns instructions for which path to follow
-	public String findPath(int x, int y) {
-		String flip = "-";
-		int number = 0;
-		String direction = "-";
-		if (x == 0 && y == 0) {
-			//flip = "-";
-			direction = "+";
-			number = xPos * 4 + yPos;
-		}
-		else if (x == 3 && y == 0) {
-			flip = "+";
-			direction = "+";
-			number = (3-xPos) * 4 + yPos;
-		}
-		else if (xPos == 3 && yPos == 0) {
-			flip = "+";
-			//direction = "-";
-			number = (3-x) * 4 + y;
-		}
-		else if (xPos == 0 && yPos == 0) {
-			//flip = "-";
-			//direction = "-";
-			number = x * 4 + y;
-		}
-		switch(number) {
-			//0: Left loading station
-			case 1: return flip + "rktC1" + direction;
-			case 2: return flip + "rktC2" + direction;
-			case 3: return flip + "rktC3" + direction;
-			case 4: return flip + "csC1" + direction;
-			case 5: return flip + "csC2" + direction;
-			case 6: return flip + "csC3" + direction;
-			case 7: return flip + "csC4" + direction;
-			case 8: return flip + "csF1" + direction;
-			case 9: return flip + "csF2" + direction;
-			case 10: return flip + "csF3" + direction;
-			case 11: return flip + "csF4" + direction;
-			//12: Right loading station
-			case 13: return flip + "rktF1" + direction;
-			case 14: return flip + "rktF2" + direction;
-			case 15: return flip + "rktF3" + direction;
-			default: return "-simple";
-		}
-	}
+	
 
 	public void setLocation(int x, int y) {
 		xPos = x;

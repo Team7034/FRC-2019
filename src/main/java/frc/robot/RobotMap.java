@@ -30,12 +30,10 @@ public class RobotMap {
   public static final int liftR = 9;
 
   public static final int habLift = 10;
-  public static final int habLift2 = 11;
 
   //SparkMaxs
-  public static final int armL = 0;
-  public static final int armR = 1;
-
+  public static final int armL = 1;
+  public static final int armR = 2;
 
   //controllers
   public static final int joystick = 0;
@@ -43,23 +41,15 @@ public class RobotMap {
 
   //pneumatics
   public static final int compressor = 0;
-  public static final int[] habLiftBack = {0, 1};
+  public static final int[] habLiftRear = {0, 1};
   public static final int[] habLiftFront = {2, 3};
   public static final int shifterCB = 4;
-  public static final int[] shifterPB = {0, 1};
   public static final int claw = 5;
-  
 
-  
-  
-  
-  // For example to map the left and right motors, you could define the
-  // following variables to use with your drivetrain subsystem.
-  // public static int leftMotor = 1;
-  // public static int rightMotor = 2;
+  //sensors
+  public static int IRSensor = 0;
 
-  // If you are using multiple modules, make sure to define both the port
-  // number and the module. For example you with a rangefinder:
-  // public static int rangefinderPort = 1;
-  // public static int rangefinderModule = 1;
+  //LED subsytem
+  public static int LED1 = 0;
+  public static int LED2 = 1;
 }

@@ -12,6 +12,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.TableEntryListener;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.*;
 
@@ -25,7 +27,8 @@ public class DashboardListener {
         NetworkTableEntry automatic = SmartDashboard.getEntry("automatic");
         NetworkTableEntry gear = SmartDashboard.getEntry("highGear");
         NetworkTableEntry forward = SmartDashboard.getEntry("forward");
-        NetworkTableEntry xy = SmartDashboard.getEntry("pos_table");
+        NetworkTableEntry xy = SmartDashboard.getEntry("pos_array");
+        NetworkTableEntry test = SmartDashboard.getEntry("test");
 
 
 
@@ -50,9 +53,14 @@ public class DashboardListener {
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         xy.addListener(event -> {
-            (new pathFollower(Robot.m_driveTrain.findPath((int) xy.getNumberArray(new Number[]{0, 0})[0], (int) xy.getNumberArray(new Number[]{0, 0})[1]))).start();
-            
-            System.out.println("Y Changed");
+            Number[] pos = xy.getNumberArray(new Number[]{0, 0});
+            Scheduler.getInstance().add(new PathFollower(Path.findPath(Robot.m_driveTrain.xPos, Robot.m_driveTrain.yPos, (int) pos[0], (int) pos[1])));
+
+            System.out.println("Pos Changed");
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+        test.addListener(event -> {
+            Scheduler.getInstance().add(new PathToPoint(3, 3, 0));
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         try {

@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.driveTrain;
 
-public class reverse extends Command {
+public class Reverse extends Command {
   private driveTrain dt = Robot.m_driveTrain;
-  public reverse() {
+  public Reverse() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -22,6 +22,7 @@ public class reverse extends Command {
   @Override
   protected void initialize() {
     dt.setReversed(!dt.getReversed());
+    Robot.m_led.update(!dt.getReversed());
   }
 
   // Called repeatedly when this Command is scheduled to run

@@ -1,11 +1,7 @@
 {
     "fileName": "navx_frc.json",
     "name": "KauaiLabs_navX_FRC",
-<<<<<<< HEAD
     "version": "3.1.366",
-=======
-    "version": "3.1.344",
->>>>>>> 473299e12e5f0e5777e11e8a92a088de9d1cb5f8
     "uuid": "cb311d09-36e9-4143-a032-55bb2b94443b",
     "mavenUrls": [
         "https://repo1.maven.org/maven2/"
@@ -15,11 +11,7 @@
         {
             "groupId": "com.kauailabs.navx.frc",
             "artifactId": "navx-java",
-<<<<<<< HEAD
             "version": "3.1.366"
-=======
-            "version": "3.1.344"
->>>>>>> 473299e12e5f0e5777e11e8a92a088de9d1cb5f8
         }
     ],
     "jniDependencies": [],
@@ -27,11 +19,7 @@
         {
             "groupId": "com.kauailabs.navx.frc",
             "artifactId": "navx-cpp",
-<<<<<<< HEAD
             "version": "3.1.366",
-=======
-            "version": "3.1.344",
->>>>>>> 473299e12e5f0e5777e11e8a92a088de9d1cb5f8
             "headerClassifier": "headers",
             "sourcesClassifier": "sources",
             "sharedLibrary": false,

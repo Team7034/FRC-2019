@@ -12,9 +12,10 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.IntakeClose;
 import frc.robot.commands.IntakeOpen;
 import frc.robot.commands.ArmReverse;
-import frc.robot.commands.IntakeClose;
+import frc.robot.commands.GrabBall;
 import frc.robot.commands.AutomaticArm;
 import frc.robot.commands.Shift;
 import frc.robot.commands.Reverse;
@@ -83,7 +84,7 @@ public class OI {
     shift.whenReleased(new Shift(false));*/
     open.whenPressed(new IntakeOpen());
     close.whenPressed(new IntakeClose());
-    arm_reverse.whenPressed(new ArmReverse());
+    //arm_reverse.whenPressed(new ArmReverse());
   }
 
   public double getArm(){

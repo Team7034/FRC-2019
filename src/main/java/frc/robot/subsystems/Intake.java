@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.IRSensor;
 import frc.robot.RobotMap;
 
 /**
@@ -29,6 +30,9 @@ public class Intake extends Subsystem {
   //DoubleSolenoid grabber;
   Solenoid grabber;
   Compressor comp;
+
+  //IR Sensor
+  public IRSensor irsense;
 
   //target power for the intake
   private double target_power = 1;
@@ -49,6 +53,8 @@ public class Intake extends Subsystem {
     grabber = new Solenoid(RobotMap.grabber);
     comp = new Compressor();
     comp.stop();
+
+    irsense = new IRSensor(RobotMap.IRSensor);
   }
 
   //open the grabber

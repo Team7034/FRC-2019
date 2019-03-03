@@ -21,21 +21,23 @@ public class RobotMap {
   public static int driveR1 = 3;
   public static int driveR2 = 4;
   public static int driveR3 = 5;
-  public static int shifterL1 = 0;
+  public static int shifter = 4;
+  /*public static int shifterL1 = 0;
   public static int shifterL2 = 1;
   public static int shifterR1 = 6;
-  public static int shifterR2 = 7;
+  public static int shifterR2 = 7;*/
 
   //arm subsystem
   public static int elevator1 = 8;
   public static int elevator2 = 9;
-  public static int arm1 = 0; //arm motors are SparkMax, not Talon
-  public static int arm2 = 1;
+  public static int arm1 = 1; //arm motors are SparkMax, not Talon
+  public static int arm2 = 2;
 
   //intake subsystem
   public static int intake1 = 6;
   public static int intake2 = 7;
   public static int grabber = 5; //grabbers are solenoid channels
+  public static int IRSensor = 0;
 
   //LED subsytem
   public static int LED1 = 0;

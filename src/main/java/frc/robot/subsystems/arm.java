@@ -178,8 +178,9 @@ public class Arm extends Subsystem {
   }
 
   public void manual_arm(double tar){
-    arm_target += tar;
+    arm_target += .1*tar;
     controller.setSetpoint(arm_target);
+    //arm1.set(.1*tar);
   }
 
   public double get_arm_pos(){

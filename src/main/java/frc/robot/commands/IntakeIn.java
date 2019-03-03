@@ -8,16 +8,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 
-public class ManualArm extends Command {
-  double target;
-  int ele_tar;
-  public ManualArm() {
+public class IntakeIn extends Command {
+  public IntakeIn() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(Robot.m_arm);
+    requires(Robot.m_intake);
   }
 
   // Called just before this Command runs the first time
@@ -28,28 +25,25 @@ public class ManualArm extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.m_arm.manual_ele(Robot.m_oi.getElevator());
-    Robot.m_arm.manual_arm(Robot.m_oi.getArm());
-    SmartDashboard.putNumber("ArmEnc", Robot.m_arm.get_arm_pos());
-    SmartDashboard.putNumber("ArmTar", Robot.m_arm.arm_target);
-    //SmartDashboard.putNumber("ArmTar", Robot.m_oi.getArm());
-    SmartDashboard.putNumber("EleEnc", Robot.m_arm.get_ele_pos());
-    }
+    Robot.m_intake.run_intake(true);
+  }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return true;
+    return false;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.m_intake.stop_intake();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    Robot.m_intake.stop_intake();
   }
 }

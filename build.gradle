@@ -1,6 +1,6 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2019.3.2"
+    id "edu.wpi.first.GradleRIO" version "2019.4.1"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -38,11 +38,7 @@ deploy {
 }
 
 // Set this to true to enable desktop support.
-<<<<<<< HEAD
 def includeDesktopSupport = false
-=======
-def includeDesktopSupport = true
->>>>>>> 473299e12e5f0e5777e11e8a92a088de9d1cb5f8
 
 // Maven central needed for JUnit
 repositories {

@@ -18,13 +18,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.ControlType;
 
 /**
  * Add your docs here.
@@ -70,6 +67,20 @@ public class arm extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
+  public arm(){
+    //intialize hashmap of states
+    Map<String, Integer> tempListMap = new HashMap<String, Integer>();
+    tempListMap.put("rest", 0);     //upright position
+    tempListMap.put("intake", 1);
+    tempListMap.put("hatchLow", 1);
+    tempListMap.put("hatchMid", 2);
+    tempListMap.put("hatchHigh", 3);
+    tempListMap.put("ballLow", 4);
+    tempListMap.put("ballMid", 5);
+    tempListMap.put("ballHigh", 6);
+    state = Collections.unmodifiableMap(tempListMap);
+  }
+
   @Override
   public void initDefaultCommand() {
     lift = new WPI_TalonSRX(RobotMap.liftR); //main left motor
@@ -106,19 +117,6 @@ public class arm extends Subsystem {
     //used for tuning PID values
     //SmartDashboard.putData("PID Controller",controller);
 
-    //intialize hashmap of states
-    Map<String, Integer> tempListMap = new HashMap<String, Integer>();
-    tempListMap.put("rest", 0);     //upright position
-    tempListMap.put("intake", 1);
-    tempListMap.put("hatchLow", 1);
-    tempListMap.put("hatchMid", 2);
-    tempListMap.put("hatchHigh", 3);
-    tempListMap.put("ballLow", 4);
-    tempListMap.put("ballMid", 5);
-    tempListMap.put("ballHigh", 6);
-    state = Collections.unmodifiableMap(tempListMap);
-
-    
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   }

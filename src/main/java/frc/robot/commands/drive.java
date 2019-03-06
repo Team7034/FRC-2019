@@ -24,8 +24,8 @@ public class Drive extends Command {
     protected void execute() {
         driveY = Robot.m_oi.getDriveY();
         driveX = Robot.m_oi.getDriveX();
-    	//speedControl = (-Robot.m_oi.getSlider() + 3)/4;
-    	Robot.m_driveTrain.drive(driveY, driveX);
+        //speedControl = (-Robot.m_oi.getSlider() + 3)/4;
+        Robot.m_driveTrain.drive(driveY, driveX);
     }
 
     // Make this return true when this Command no longer needs to run execute()

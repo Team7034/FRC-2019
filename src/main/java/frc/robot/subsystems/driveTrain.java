@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -31,15 +32,16 @@ public class driveTrain extends Subsystem {
 	public WPI_TalonSRX rightDrive;
 	public AHRS gyro;
 	
-	private Solenoid shifter;
+	public Solenoid shifter;
 	//private DoubleSolenoid shifter;
-	Compressor comp;
+	public Compressor comp;
     
 	public static final double MAX_SPEED = 10000;
 	public static final int TICKS_PER_METER = 55100;
+	public static final boolean LOW_GEAR = true;
+	public static final boolean HIGH_GEAR = false;
 
-	private boolean reversed;
-	private int gear;
+	public boolean reversed;
 	public boolean auto;
 	public int xPos = 0;
 	public int yPos = 0;
@@ -71,10 +73,10 @@ public class driveTrain extends Subsystem {
 		setReversed(true);
 		diffDrive = new DifferentialDrive(talonL, talonR);
 
-		shifter = new Solenoid(RobotMap.shifterCB);
-		//shifter = new DoubleSolenoid(RobotMap.shifterPB[0], RobotMap.shifterPB[1]);
 		comp = new Compressor(RobotMap.compressor);
-		
+		shifter = new Solenoid(RobotMap.shifter);
+		//setGear(false); //true = low gear
+
 		//Initializes gyro
         try {
 			gyro = new AHRS(SPI.Port.kMXP);
@@ -90,6 +92,7 @@ public class driveTrain extends Subsystem {
     }
     
     public void drive(double speed, double rot) {
+		
 		if (!reversed) {
 			diffDrive.arcadeDrive(-speed, -rot);
 		}
@@ -173,41 +176,23 @@ public class driveTrain extends Subsystem {
     	comp.setClosedLoopControl(on);
 	}
 	
-    public void gear2() {
-		if (!shifter.get()) {
-			shifter.set(true);
-		}	
-		//if (shifter.get() != Value.kReverse) {
-			//shifter.set(Value.kReverse);
-		//}
-	}
-	
-    public void gear1() {
-		if (shifter.get()) {
-			shifter.set(false);
-		}
-		/*
-		if (shifter.get() != Value.kForward) {
-			shifter.set(Value.kForward);
-		}
-		*/
-	}
-	public void toggleGear() {
-		/*
-		if (shifter.get() == Value.kForward) {
-			gear2();
-		}
-		*/
-		if (!shifter.get()) {
-			gear2();
+	//low gear is true
+    public void setGear(boolean gear) {
+		if (gear == HIGH_GEAR) {
+			shifter.set(HIGH_GEAR);
 		}
 		else {
-			gear1();
+			shifter.set(LOW_GEAR);
 		}
-		
 	}
 
-	
+	public void toggleGear() {
+		setGear(!shifter.get());
+	}
+
+	public boolean inHighGear() {
+		return shifter.get() == HIGH_GEAR;
+	}
 
 	public void setLocation(int x, int y) {
 		xPos = x;

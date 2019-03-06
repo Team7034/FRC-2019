@@ -43,7 +43,7 @@ public class RobotMap {
   public static final int compressor = 0;
   public static final int[] habLiftRear = {0, 1};
   public static final int[] habLiftFront = {2, 3};
-  public static final int shifterCB = 4;
+  public static final int shifter = 4;
   public static final int claw = 5;
 
   //sensors

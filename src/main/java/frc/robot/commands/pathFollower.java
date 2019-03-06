@@ -6,10 +6,6 @@ import frc.robot.subsystems.driveTrain;
 
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
-import jaci.pathfinder.Pathfinder;
-import jaci.pathfinder.PathfinderFRC;
-import jaci.pathfinder.Trajectory;
-import jaci.pathfinder.followers.EncoderFollower;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -31,7 +27,6 @@ public class PathFollower extends Command {
 		super("pathFollower");
 		//requires(Robot.m_driveTrain);
 		myPath = new Path(pathName);
-		//SmartDashboard.putString("Last Path", myPath.getName());
 	}
 
     // Called just before this Command runs the first time
@@ -43,6 +38,7 @@ public class PathFollower extends Command {
 
 		//Starts the notifier
 		follower.startPeriodic(myPath.getDT());
+		//SmartDashboard.putString("Last Path", myPath.getName());
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -67,7 +63,6 @@ public class PathFollower extends Command {
     // subsystems is scheduled to run
     protected void interrupted() {
 		follower.stop();
-		driveT.pathDrive(0, 0);
 		driveT.auto = false;
 	}
 

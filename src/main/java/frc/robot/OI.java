@@ -10,8 +10,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -49,20 +49,22 @@ public class OI {
   public OI() {
     joyTrigger.whenPressed(new Shift());
     joyB2.whenPressed(new Reverse());
-    
-    joyB9.whenPressed(new Grab(true));
-    joyB9.whenReleased(new Grab(false));
+
+    joyB3.whenPressed(new HABLiftFront(false));
+    joyB4.whenPressed(new HABLiftRear(false));
+    joyB5.whenPressed(new HABLiftUp());
+    joyB6.whenPressed(new HABLiftUp());
 
     joyB11.whenPressed(new ZeroSensors());
     joyB12.whenPressed(new PathFollower("-simple"));
     
-    /*upright.whenPressed(new AutomaticArm(Arm.state.get("rest")));
-    forward.whenPressed(new AutomaticArm(Arm.state.get("ballLow")));
-    backward.whenPressed(new AutomaticArm(Arm.state.get("ballHigh")));
-    mid.whenPressed(new AutomaticArm(Arm.state.get("ballMid")));
-    hatchHigh.whenPressed(new AutomaticArm(Arm.state.get("hatchHigh")));
+    upright.whenPressed(new AutomaticArm(arm.state.get("rest")));
+    forward.whenPressed(new AutomaticArm(arm.state.get("ballLow")));
+    backward.whenPressed(new AutomaticArm(arm.state.get("ballHigh")));
+    mid.whenPressed(new AutomaticArm(arm.state.get("ballMid")));
+    hatchHigh.whenPressed(new AutomaticArm(arm.state.get("hatchHigh")));
     arm_reverse.whenPressed(new ArmReverse());
-    */
+    
     open.whenPressed(new Grab(false));
     close.whenPressed(new Grab(true));
   }

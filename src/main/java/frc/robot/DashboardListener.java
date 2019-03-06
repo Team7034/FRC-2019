@@ -27,7 +27,9 @@ public class DashboardListener {
         NetworkTableEntry automatic = SmartDashboard.getEntry("automatic");
         NetworkTableEntry gear = SmartDashboard.getEntry("highGear");
         NetworkTableEntry forward = SmartDashboard.getEntry("forward");
-        NetworkTableEntry xy = SmartDashboard.getEntry("pos_array");
+        NetworkTableEntry xTarget = SmartDashboard.getEntry("xTarget");
+        NetworkTableEntry yTarget = SmartDashboard.getEntry("yTarget");
+        //NetworkTableEntry xy = SmartDashboard.getEntry("position");
         NetworkTableEntry test = SmartDashboard.getEntry("test");
 
 
@@ -39,20 +41,16 @@ public class DashboardListener {
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         gear.addListener(event -> {
-            if (gear.getBoolean(true)) {
-                Robot.m_driveTrain.gear1();
-            }
-            else {
-                Robot.m_driveTrain.gear2();
-            }
+            Robot.m_driveTrain.setGear(gear.getBoolean(true));
             
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         forward.addListener(event -> {
             Robot.m_driveTrain.setReversed(!forward.getBoolean(true));
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
+        /*
         xy.addListener(event -> {
+
             Number[] pos = xy.getNumberArray(new Number[]{0, 0});
             Scheduler.getInstance().add(new PathFollower(Path.findPath(Robot.m_driveTrain.xPos, Robot.m_driveTrain.yPos, (int) pos[0], (int) pos[1])));
 
@@ -62,7 +60,12 @@ public class DashboardListener {
         test.addListener(event -> {
             Scheduler.getInstance().add(new PathToPoint(3, 3, 0));
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
+        */
+        yTarget.addListener(event -> {
+            System.out.println("y");
+            Scheduler.getInstance().add(new PathFollower(Path.findPath((int) Robot.m_driveTrain.xPos, (int) Robot.m_driveTrain.yPos, (int) xTarget.getDouble(0), (int) yTarget.getDouble(0))));
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        
         try {
             Thread.sleep(20);
         }

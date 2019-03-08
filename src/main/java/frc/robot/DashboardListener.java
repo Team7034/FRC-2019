@@ -27,10 +27,10 @@ public class DashboardListener {
         NetworkTableEntry automatic = SmartDashboard.getEntry("automatic");
         NetworkTableEntry gear = SmartDashboard.getEntry("highGear");
         NetworkTableEntry forward = SmartDashboard.getEntry("forward");
-        NetworkTableEntry xTarget = SmartDashboard.getEntry("xTarget");
-        NetworkTableEntry yTarget = SmartDashboard.getEntry("yTarget");
+        NetworkTableEntry xTarget = SmartDashboard.getEntry("x_target");
+        NetworkTableEntry yTarget = SmartDashboard.getEntry("y_target");
         //NetworkTableEntry xy = SmartDashboard.getEntry("position");
-        NetworkTableEntry test = SmartDashboard.getEntry("test");
+        NetworkTableEntry test = SmartDashboard.getEntry("listenerTest");
 
 
 
@@ -62,15 +62,16 @@ public class DashboardListener {
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         */
         yTarget.addListener(event -> {
-            System.out.println("y");
-            Scheduler.getInstance().add(new PathFollower(Path.findPath((int) Robot.m_driveTrain.xPos, (int) Robot.m_driveTrain.yPos, (int) xTarget.getDouble(0), (int) yTarget.getDouble(0))));
+            System.out.println("_XY changed");
+            Path p = new Path((int) Robot.m_driveTrain.xPos, (int) Robot.m_driveTrain.yPos, (int) xTarget.getDouble(0), (int) yTarget.getDouble(0));
+            Scheduler.getInstance().add(new PathFollower(p));
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         
         try {
             Thread.sleep(20);
         }
         catch (InterruptedException ex) {
-            System.out.println("Listener interrupted!");
+            System.out.println("_Listener interrupted!");
             return;
         }
     }

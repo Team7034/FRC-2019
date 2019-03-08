@@ -20,6 +20,8 @@ import frc.robot.subsystems.*;
 public class OI {
   static Joystick stick = new Joystick(RobotMap.joystick); //LogitechX3D
   static Controller cont = new Controller(RobotMap.gamepad);
+  static Joystick gunner = new Joystick(RobotMap.gunner);
+
   Button joyTrigger = new JoystickButton(stick, 1);
   Button joyB2 = new JoystickButton(stick, 2);
   Button joyB3 = new JoystickButton(stick, 3);
@@ -41,6 +43,23 @@ public class OI {
   Button close = new JoystickButton(cont, 6);
   Button hatchHigh = new JoystickButton(cont, 7);
   Button arm_reverse = new JoystickButton(cont, 8);
+
+
+  //button panel
+  Button cargo_low = new JoystickButton(gunner, 1);
+  Button cargo_mid = new JoystickButton(gunner, 2);
+  Button cargo_high = new JoystickButton(gunner, 3);
+  Button cargo_intake = new JoystickButton(gunner, 4);
+
+  Button hatch_low = new JoystickButton(gunner, 5);
+  Button hatch_mid = new JoystickButton(gunner, 6);
+  Button hatch_high = new JoystickButton(gunner, 7);
+  Button open_panel = new JoystickButton(gunner, 8);
+
+  Button toggle_man = new JoystickButton(gunner, 9);
+  Button blank = new JoystickButton(gunner, 10);
+  Button up = new JoystickButton(gunner, 11);
+  Button close_panel = new JoystickButton(gunner, 12);
   
 
   //Button gamepadB = new JoystickButton(gamepad, 2);
@@ -56,7 +75,7 @@ public class OI {
     joyB6.whenPressed(new HABLiftUp());
 
     joyB11.whenPressed(new ZeroSensors());
-    joyB12.whenPressed(new PathFollower("-simple"));
+    joyB12.whenPressed(new PathFollower(new Path("-simple")));
     
     upright.whenPressed(new AutomaticArm(arm.state.get("rest")));
     forward.whenPressed(new AutomaticArm(arm.state.get("ballLow")));
@@ -67,6 +86,22 @@ public class OI {
     
     open.whenPressed(new Grab(false));
     close.whenPressed(new Grab(true));
+
+    //button panel
+    cargo_low.whenPressed(new AutomaticArm(arm.state.get("ballLow")));
+    cargo_mid.whenPressed(new AutomaticArm(arm.state.get("ballMid")));
+    cargo_high.whenPressed(new AutomaticArm(arm.state.get("ballHigh")));
+    cargo_intake.whenPressed(new AutoGrab());
+
+    hatch_low.whenPressed(new AutomaticArm(arm.state.get("hatchLow")));
+    hatch_mid.whenPressed(new AutomaticArm(arm.state.get("hatchMid")));
+    hatch_high.whenPressed(new AutomaticArm(arm.state.get("hatchHigh")));
+    open_panel.whenPressed(new Grab(false));
+    
+    //toggle_man
+    //blank
+    up.whenPressed(new AutomaticArm(arm.state.get("rest")));
+    close_panel.whenPressed(new Grab(true));
   }
   
 

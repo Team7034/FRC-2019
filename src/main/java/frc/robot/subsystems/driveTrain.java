@@ -22,10 +22,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class driveTrain extends Subsystem {
 
     private DifferentialDrive diffDrive;
-    private WPI_TalonSRX talonL;
+    public WPI_TalonSRX talonL;
 	private WPI_TalonSRX talonL2;
 	private WPI_TalonSRX talonL3;
-	private WPI_TalonSRX talonR;
+	public WPI_TalonSRX talonR;
 	private WPI_TalonSRX talonR2;
 	private WPI_TalonSRX talonR3;
 	public WPI_TalonSRX leftDrive;
@@ -101,7 +101,7 @@ public class driveTrain extends Subsystem {
 		}
 	}
 
-	public void pathDrive(double leftSpeed, double rightSpeed) {
+	public void autoDrive(double leftSpeed, double rightSpeed) {
 		if (!reversed) {
 			diffDrive.tankDrive(leftSpeed, -rightSpeed);
 		}

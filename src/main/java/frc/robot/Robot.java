@@ -146,7 +146,7 @@ public class Robot extends TimedRobot {
     //Scheduler.getInstance().add(new moveArm());
     //Scheduler.getInstance().add(new moveLift());
     //Scheduler.getInstance().add(new AutoShifter());
-    SmartDashboard.putData(new AutoShifter());
+    SmartDashboard.putData(new autoShifter());
     //SmartDashboard.putData(new PathToPoint(2, 0, 0));
     //SmartDashboard.putNumberArray("pos_array", new double[]{0, 0});
     SmartDashboard.putNumber("xTarget", 0);
@@ -166,7 +166,7 @@ public class Robot extends TimedRobot {
       m_driveTrain.auto = false;
     }
     if(!m_driveTrain.auto) {
-      Scheduler.getInstance().add(new Drive());
+      Scheduler.getInstance().add(new drive());
     }
 
     Scheduler.getInstance().add(new ManualArm());

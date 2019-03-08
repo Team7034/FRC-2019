@@ -12,10 +12,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.subsystems.driveTrain;
 
-public class AutoShifter extends Command {
+public class autoShifter extends Command {
   private driveTrain dt = Robot.m_driveTrain;
   private double lastV = 0;
-  public AutoShifter() {
+  public autoShifter() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }

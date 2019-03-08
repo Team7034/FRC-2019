@@ -12,10 +12,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 
 
-public class MoveArm extends Command {
+public class moveArm extends Command {
   private int target; //target arm position
   private boolean finished = false; //has the arm reached its pos?
-  public MoveArm(int target) {
+  public moveArm(int target) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     this.target = target;

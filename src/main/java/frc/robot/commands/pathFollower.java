@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class PathFollower extends Command {
+public class pathFollower extends Command {
 	private driveTrain driveT = Robot.m_driveTrain;
 
 	private Notifier follower = new Notifier(this::followPath);
@@ -23,7 +23,7 @@ public class PathFollower extends Command {
 
 		ex: "+csF2-"
 	*/
-    public PathFollower(Path path) {
+    public pathFollower(Path path) {
 		super("pathFollower");
 		//requires(Robot.m_driveTrain);
 		this.myPath = path;

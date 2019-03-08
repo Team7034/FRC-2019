@@ -10,8 +10,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class ZeroSensors extends Command {
-  public ZeroSensors() {
+public class zeroSensors extends Command {
+  public zeroSensors() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }

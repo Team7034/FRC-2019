@@ -10,9 +10,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class Grab extends Command {
+public class grab extends Command {
   private Boolean state;
-  public Grab(Boolean state) {
+  public grab(Boolean state) {
     this.state = state;
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);

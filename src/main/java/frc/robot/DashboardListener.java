@@ -64,7 +64,7 @@ public class DashboardListener {
         yTarget.addListener(event -> {
             System.out.println("_XY changed");
             Path p = new Path((int) Robot.m_driveTrain.xPos, (int) Robot.m_driveTrain.yPos, (int) xTarget.getDouble(0), (int) yTarget.getDouble(0));
-            Scheduler.getInstance().add(new PathFollower(p));
+            Scheduler.getInstance().add(new pathFollower(p));
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         
         try {

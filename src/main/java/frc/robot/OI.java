@@ -66,16 +66,16 @@ public class OI {
   //Button gamepadA = new JoystickButton(gamepad, 1);
 
   public OI() {
-    joyTrigger.whenPressed(new Shift());
-    joyB2.whenPressed(new Reverse());
+    joyTrigger.whenPressed(new shift());
+    joyB2.whenPressed(new reverse());
 
     joyB3.whenPressed(new HABLiftFront(false));
     joyB4.whenPressed(new HABLiftRear(false));
     joyB5.whenPressed(new HABLiftUp());
     joyB6.whenPressed(new HABLiftUp());
 
-    joyB11.whenPressed(new ZeroSensors());
-    joyB12.whenPressed(new PathFollower(new Path("-simple")));
+    joyB11.whenPressed(new zeroSensors());
+    joyB12.whenPressed(new pathFollower(new Path("-simple")));
     
     upright.whenPressed(new AutomaticArm(arm.state.get("rest")));
     forward.whenPressed(new AutomaticArm(arm.state.get("ballLow")));
@@ -84,8 +84,8 @@ public class OI {
     hatchHigh.whenPressed(new AutomaticArm(arm.state.get("hatchHigh")));
     arm_reverse.whenPressed(new ArmReverse());
     
-    open.whenPressed(new Grab(false));
-    close.whenPressed(new Grab(true));
+    open.whenPressed(new grab(false));
+    close.whenPressed(new grab(true));
 
     //button panel
     cargo_low.whenPressed(new AutomaticArm(arm.state.get("ballLow")));
@@ -96,12 +96,12 @@ public class OI {
     hatch_low.whenPressed(new AutomaticArm(arm.state.get("hatchLow")));
     hatch_mid.whenPressed(new AutomaticArm(arm.state.get("hatchMid")));
     hatch_high.whenPressed(new AutomaticArm(arm.state.get("hatchHigh")));
-    open_panel.whenPressed(new Grab(false));
+    open_panel.whenPressed(new grab(false));
     
     //toggle_man
     //blank
     up.whenPressed(new AutomaticArm(arm.state.get("rest")));
-    close_panel.whenPressed(new Grab(true));
+    close_panel.whenPressed(new grab(true));
   }
   
 

@@ -7,11 +7,11 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class Drive extends Command {
+public class drive extends Command {
     private double driveY;
     private double driveX;
 	//private double speedControl;
-    public Drive() {
+    public drive() {
     	super("Drive");
         requires(Robot.m_driveTrain);
     }

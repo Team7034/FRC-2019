@@ -9,9 +9,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class RunIntake extends Command {
+public class runIntake extends Command {
   private double power;
-  public RunIntake(double power) {
+  public runIntake(double power) {
     this.power = power;
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);

@@ -11,11 +11,11 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 
-public class MoveLift extends Command {
+public class moveLift extends Command {
   private int target;
   private boolean finished = false;
 
-  public MoveLift(int target) {
+  public moveLift(int target) {
     this.target = target;
   }
 

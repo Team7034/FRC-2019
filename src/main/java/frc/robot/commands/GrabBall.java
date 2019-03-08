@@ -19,8 +19,8 @@ public class GrabBall extends CommandGroup {
     //move arm into intake position
     addSequential(new AutomaticArm(arm.state.get("intake")));
     //open intake, turn on intake sucker
-    addParallel(new Grab(false));
-    addSequential(new RunIntake(Robot.m_claw.target_power));
+    addParallel(new grab(false));
+    addSequential(new runIntake(Robot.m_claw.target_power));
     //wait until ball is grabbed
     addSequential(new AutoGrab());
     //move arm to center when grabbed

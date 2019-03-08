@@ -10,9 +10,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class Shift extends Command {
+public class shift extends Command {
 
-  public Shift() {
+  public shift() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }

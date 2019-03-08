@@ -19,7 +19,7 @@ public class AutomaticArm extends CommandGroup {
     // addSequential(new Command2());
     // these will run in order.
     addSequential(new MoveArm(target));
-    addSequential(new MoveLift(target));
+    //addSequential(new MoveLift(target));
 
     // To run multiple commands at the same time,
     // use addParallel()

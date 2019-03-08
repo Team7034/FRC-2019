@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Path;
 import frc.robot.Robot;
 import frc.robot.subsystems.driveTrain;
-import jaci.pathfinder.Trajectory;
 
 public class PathToPoint extends Command {
   private driveTrain driveT = Robot.m_driveTrain;
@@ -72,12 +71,12 @@ public class PathToPoint extends Command {
   // subsystems is scheduled to run
   protected void interrupted() {
 		follower.stop();
-		driveT.pathDrive(0, 0);
+		driveT.autoDrive(0, 0);
 		driveT.auto = false;
 	}
 
 	private void followPath() {
 		double[] speeds = myPath.calculateSpeeds(driveT.getEncPosL(), driveT.getEncPosR(), driveT.getAngle());
-		driveT.pathDrive(speeds[0], speeds[1]);
+		driveT.autoDrive(speeds[0], speeds[1]);
 	}
 }

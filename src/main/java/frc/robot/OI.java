@@ -56,7 +56,7 @@ public class OI {
     joyB6.whenPressed(new HABLiftUp());
 
     joyB11.whenPressed(new ZeroSensors());
-    joyB12.whenPressed(new PathFollower("-simple"));
+    joyB12.whenPressed(new PathFollower(new Path("-simple")));
     
     upright.whenPressed(new AutomaticArm(arm.state.get("rest")));
     forward.whenPressed(new AutomaticArm(arm.state.get("ballLow")));

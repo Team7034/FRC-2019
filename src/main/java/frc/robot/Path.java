@@ -26,11 +26,11 @@ public class Path {
     private final double max_acceleration = 5;
     private final double max_jerk = 60;
     private final int TICKS_PER_REV = 18000;
-    public static double kP = 5;
-	public static double kI = 0;
-	public static double kD = 0.1;
-	public static double kA = 0;
-	public static double kG = 0.8 * (-1.0/80.0);
+    public double kP = 5;
+	public double kI = 0;
+	public double kD = 0.1;
+	public double kA = 0;
+	public double kG = 0.8;
     
     private boolean flip;
     private String pathName;
@@ -38,13 +38,16 @@ public class Path {
     private EncoderFollower right;
     private double dt = 0.05;
     private double offset = 0;
+    private int xNew;
+    private int yNew;
+
+    public Path(int xPos, int yPos, int x, int y) {
+        this(findPath(xPos, yPos, x, y));
+        this.xNew = x;
+        this.yNew = y;
+    }
 
     public Path(String pathName) {
-        kP = SmartDashboard.getNumber("Path P", kP);
-		kI = SmartDashboard.getNumber("Path I", kI);
-		kD = SmartDashboard.getNumber("Path D", kD);
-        kA = SmartDashboard.getNumber("Path A", kA);
-        kG = SmartDashboard.getNumber("Path G", kG);
         if (pathName.substring(0,1) == "+") {
 			flip = true;
 		}
@@ -74,11 +77,6 @@ public class Path {
     }
 
     public Path(double x, double y, double rot) {
-        kP = SmartDashboard.getNumber("Path P", kP);
-		kI = SmartDashboard.getNumber("Path I", kI);
-		kD = SmartDashboard.getNumber("Path D", kD);
-        kA = SmartDashboard.getNumber("Path A", kA);
-        kG = SmartDashboard.getNumber("Path G", kG);
         flip = false;
         Waypoint[] points = new Waypoint[]{
             new Waypoint(0, 0, 0),
@@ -115,6 +113,15 @@ public class Path {
         return pathName;
     }
 
+    public void configPIDAG(double kP, double kI, double kD, double kA, double kG) {
+        this.kP = kP;
+        this.kI = kI;
+        this.kD = kD;
+        this.kA = kA;
+        this.kG = kG;
+        left.configurePIDVA(kP, kI, kD, 1 / max_velocity, kA);
+        right.configurePIDVA(kP, kI, kD, 1 / max_velocity, kA);
+    }
     public void configSensors(int leftEncPos, int rightEncPos, double gyroHeading) {
         left.configureEncoder(leftEncPos, TICKS_PER_REV, wheel_diameter);
         right.configureEncoder(rightEncPos, TICKS_PER_REV, wheel_diameter);
@@ -127,7 +134,7 @@ public class Path {
     public double[] calculateSpeeds(int leftEncPos, int rightEncPos, double heading) {
         double desired_heading = Pathfinder.r2d(left.getHeading());
         double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - (heading - offset));
-        double turn = kG * heading_difference;
+        double turn = kG * (-1.0/80.0) * heading_difference;
 		if (flip) {
 			turn *= -1;
         }
@@ -140,6 +147,14 @@ public class Path {
     public void reset() {
         left.reset();
         right.reset();
+    }
+
+    public int getX() {
+        return xNew;
+    }
+
+    public int getY() {
+        return yNew;
     }
     
 	//returns instructions for which path to follow

@@ -49,7 +49,7 @@ public class Robot extends TimedRobot {
     team = m_ds.getAlliance();
     m_led = new LED(team);
     m_oi = new OI();
-    m_chooser.setDefaultOption("Default Auto", new PathFollower("-simple"));
+    m_chooser.setDefaultOption("Default Auto", new RocketFinder());
     //chooser.addOption("My Auto", new MyAutoCommand());
     pdp = new PowerDistributionPanel();
     pdp.clearStickyFaults();
@@ -59,11 +59,12 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("automatic", false);
     SmartDashboard.putBoolean("highGear", true);
     SmartDashboard.putBoolean("forward", true);
-    SmartDashboard.putNumber("Path P", Path.kP);
-    SmartDashboard.putNumber("Path I", Path.kI);
-    SmartDashboard.putNumber("Path D", Path.kD);
-    SmartDashboard.putNumber("Path A", Path.kA);
-    SmartDashboard.putNumber("test", 0);
+    SmartDashboard.putNumber("Path P", 5);
+    SmartDashboard.putNumber("Path I", 0);
+    SmartDashboard.putNumber("Path D", 0);
+    SmartDashboard.putNumber("Path A", 0);
+    SmartDashboard.putNumber("Path G", 0.8);
+    SmartDashboard.putNumber("listenerTest", 0);
   }
 
   /**
@@ -144,7 +145,8 @@ public class Robot extends TimedRobot {
     
     //Scheduler.getInstance().add(new moveArm());
     //Scheduler.getInstance().add(new moveLift());
-    Scheduler.getInstance().add(new AutoShifter());
+    //Scheduler.getInstance().add(new AutoShifter());
+    SmartDashboard.putData(new AutoShifter());
     //SmartDashboard.putData(new PathToPoint(2, 0, 0));
     //SmartDashboard.putNumberArray("pos_array", new double[]{0, 0});
     SmartDashboard.putNumber("xTarget", 0);
@@ -166,6 +168,9 @@ public class Robot extends TimedRobot {
       Scheduler.getInstance().add(new Drive());
     }
     
+    double angle = m_driveTrain.gyro.getYaw();
+    SmartDashboard.putNumber("teleop angle", angle);
+
     /*
     if(OI.cont.getDPAD("left")){
       Scheduler.getInstance().add(new HABLiftRear(true));

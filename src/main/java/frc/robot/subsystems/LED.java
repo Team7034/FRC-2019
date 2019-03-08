@@ -38,10 +38,16 @@ public class LED extends Subsystem {
       //set forward LEDS to team color and rear to off
       on(1);
       off(2);
+      //front leds
+      on(3);
+      off(4);
     }else{
       //set rear LEDS to team color and forward to off
       off(1);
       on(2);
+      //front leds
+      on(4);
+      off(3);
     }
     controller.Update();
   }

@@ -26,8 +26,8 @@ public class RobotMap {
   public static final int intakeL = 6;
   public static final int intakeR = 7;
   
-  public static final int liftL = 8;
-  public static final int liftR = 9;
+  public static final int liftL = 9;
+  public static final int liftR = 8;
 
   public static final int habLift = 10;
 
@@ -38,6 +38,7 @@ public class RobotMap {
   //controllers
   public static final int joystick = 0;
   public static final int gamepad = 1;
+  public static final int gunner = 2;
 
   //pneumatics
   public static final int compressor = 0;

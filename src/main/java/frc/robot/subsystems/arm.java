@@ -56,6 +56,7 @@ public class arm extends Subsystem {
   //ball mid
   //ball high
   private int elevatorPosition[] = {0, 10000, 30000, 34000, 18000, 28000, 34000};
+  //private int elevatorPosition[] = {0, 1000000, 2000000, 2600000, 0, 2000000, 2600000};
 
   //PID controllers
   public ArmPIDController controller;
@@ -79,17 +80,15 @@ public class arm extends Subsystem {
     tempListMap.put("ballMid", 5);
     tempListMap.put("ballHigh", 6);
     state = Collections.unmodifiableMap(tempListMap);
-  }
 
-  @Override
-  public void initDefaultCommand() {
     lift = new WPI_TalonSRX(RobotMap.liftR); //main left motor
     lift2 = new WPI_TalonSRX(RobotMap.liftL);
     
     lift2.follow(lift);
 
     lift.setSensorPhase(false);
-    lift.configClosedLoopPeakOutput(0, 1);
+    //lift.setSensorPhase(true);
+    lift.configClosedLoopPeakOutput(0, 0.3);
     lift.setSelectedSensorPosition(0);
     lift.setNeutralMode(NeutralMode.Brake);
     lift2.setNeutralMode(NeutralMode.Brake);
@@ -119,6 +118,10 @@ public class arm extends Subsystem {
 
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
+  }
+
+  @Override
+  public void initDefaultCommand() {
   }
 
   /**

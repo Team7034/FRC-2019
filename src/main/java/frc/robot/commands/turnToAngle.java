@@ -20,7 +20,7 @@ public class turnToAngle extends TimedCommand {
    * Add your docs here.
    */
   private PIDController leftPID;
-  //private PIDController rightPID;
+  private PIDController rightPID;
   private double target;
 
   public turnToAngle(double target_angle) {
@@ -29,31 +29,33 @@ public class turnToAngle extends TimedCommand {
     target = target_angle;
     requires(Robot.m_driveTrain);
     leftPID = new PIDController(.002,0,0.000,0, Robot.m_driveTrain.gyro, Robot.m_driveTrain.talonL);
-		//rightPID = new PIDController(.002,0,0.000,0, Robot.m_driveTrain.gyro, Robot.m_driveTrain.talonR);
-    leftPID.setAbsoluteTolerance(1);
+		rightPID = new PIDController(.002,0,0.000,0, Robot.m_driveTrain.gyro, Robot.m_driveTrain.talonR);
     leftPID.setSetpoint(target);
-    //rightPID.setSetpoint(target);
+    rightPID.setSetpoint(target);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
     leftPID.enable();
-    //rightPID.enable();
+    rightPID.enable();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-      
-      Robot.m_driveTrain.talonR.set(-leftPID.get());
+
+    double setpoint = leftPID.getSetpoint();
+    double setpoint2 = rightPID.getSetpoint();
+    SmartDashboard.putNumber("leftPID", setpoint);
+    SmartDashboard.putNumber("rightPID", setpoint2);
   }
 
   // Called once after timeout
   @Override
   protected void end() {
     leftPID.disable();
-    //rightPID.disable();
+    rightPID.disable();
   }
 
   // Called when another command which requires one or more of the same

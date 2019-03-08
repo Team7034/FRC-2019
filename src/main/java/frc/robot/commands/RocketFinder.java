@@ -40,8 +40,9 @@ public class RocketFinder extends Command {
 
     requires(Robot.m_driveTrain);
 
-    //theta_bryce = bryce_theta;
-    //distanceFromRocket = distance;
+    /*theta_bryce = bryce_theta;
+    distanceFromRocket = distance;*/
+
   }
 
   turnToAngle test;
@@ -49,16 +50,10 @@ public class RocketFinder extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-
-    target = Robot.m_driveTrain.gyro.getYaw() - SmartDashboard.getNumber("BRYCE_YAW", 999);
-    SmartDashboard.putNumber("target", target);
-
     /*current_angle = Robot.m_driveTrain.gyro.getYaw();
     
     test = new turnToAngle(current_angle+90);
-    */
-    theta_ours = 90 - current_angle + SmartDashboard.getNumber("BRYCE_YAW", 999);
-    /*
+    
     if (theta_bryce != 0 && distanceFromRocket != 0)
     {
     theta_ours = 90 + theta_bryce - current_angle;
@@ -74,18 +69,13 @@ public class RocketFinder extends Command {
         SmartDashboard.putNumber("theta_ours", theta_ours);
 
       }
-      */
+
     current_angle = Robot.m_driveTrain.gyro.getYaw();
     height = distanceFromRocket*Math.sin(theta_ours);
     length = distanceFromRocket*Math.cos(theta_ours);
-    phi = Math.atan((height-epsilon)/length) * 3.1415/180; //tan inverse = atan = arctan
+    phi = Math.atan((height-epsilon)/length); //tan inverse = atan = arctan
     rho = 18;
-
-    theta_bryce = SmartDashboard.getNumber("BRYCE_YAW", 0);
     c = Math.sqrt(((length*length)+((height-epsilon))*((height-epsilon))));
-
-      turningAngle = current_angle - theta_bryce;
-      SmartDashboard.putNumber("turning angle", turningAngle);
 
     System.out.println("RocketFinder was initialized");
 
@@ -94,50 +84,23 @@ public class RocketFinder extends Command {
     SmartDashboard.putNumber("height from rocket", height);
     SmartDashboard.putNumber("length from rocket", length);
     SmartDashboard.putNumber("nathan phi", phi);
-    System.out.println(theta_ours +  "is the angle we are going to turn");
-    SmartDashboard.putNumber("theta_ours", theta_ours);
-      
-
-    encoderPositionAtStart = (Robot.m_driveTrain.getEncPosR() / 1399.539244); //in inches now
+    System.out.println(theta_ours +  "is the angle we are going to turn");*/
+    
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
     System.out.println("we are executing now");
-    SmartDashboard.putBoolean("has turned?", hasTurned);
-
-    double error = current_angle - turningAngle;
-    if (error >= -1.5 || error <= 1.5)
-      {
-        hasTurned = true;
-      }
-
-      double currentEncoderPosition = (Robot.m_driveTrain.getEncPosR() / 1399.539244); //in inches
-      if (hasTurned)
-      {
-        //if (currentEncoderPosition < (c + rho - currentEncoderPosition))
-        if (currentEncoderPosition < (encoderPositionAtStart + (SmartDashboard.getNumber("BRYCE_DISTANCE", 0)*1400) + 1400*30))
-        {
-          Robot.m_driveTrain.drive(0.5,0);
-        }
-        else  
-          Robot.m_driveTrain.drive(0,0);
-        /*
-        else if (currentEncoderPosition > (c+rho - currentEncoderPosition))
-        {
-          //Robot.m_driveTrain.drive((currentEncoderPosition-(c+rho- currentEncoderPosition)/50), 0);
-        }
-        */
-      }
-
 
      //Robot.m_driveTrain.talonL.set(0.5);
+     double encoderPositionAtStart = (Robot.m_driveTrain.getEncPosR() / 1399.539244); //in inches now
      // turnToAngle(theta_ours-phi);
      SmartDashboard.putNumber("nathan encoder start", encoderPositionAtStart);
     
      // double target = theta_ours - phi;
-       double tolerance = 0; //tolerance degrees
+      double target = 100;
+      double tolerance = 5; //tolerance degrees
     System.out.println("before if statemetns");
     current_angle = Robot.m_driveTrain.gyro.getYaw();
     
@@ -147,8 +110,7 @@ public class RocketFinder extends Command {
     //}
     SmartDashboard.putNumber("current angle", Robot.m_driveTrain.gyro.getYaw());
     
-      //double turn = ((current_angle - target)/110);
-      double turn = ((current_angle - turningAngle) * 0.025) + 0.05;
+      double turn = ((current_angle - target)/85);
       if (turn > 0.5)
         turn = 0.5;
       else if (turn < -0.5)
@@ -157,18 +119,11 @@ public class RocketFinder extends Command {
       double turnStrength = turn;
       if (hasTurned == false)
       {
-      if (current_angle == 180)
-      {
-        Robot.m_driveTrain.drive(0.5, 0.5);
-      }
-      Robot.m_driveTrain.autoDrive(-turnStrength, -turnStrength);
-    }
-    /*
+      //double turnStrength = turn;
     if (target > 0)
     {
       current_angle = Robot.m_driveTrain.gyro.getYaw();
       System.out.println("TURNING 1");
-      
        if (current_angle < target)
        { 
          System.out.println("TURNING 2"); 
@@ -177,9 +132,8 @@ public class RocketFinder extends Command {
          System.out.println("TURNING 3");
           current_angle = Robot.m_driveTrain.gyro.getYaw();
           SmartDashboard.putNumber("current angle", current_angle);
-         // Robot.m_driveTrain.drive(0,turnStrength);
-         Robot.m_driveTrain.autoDrive(turnStrength, turnStrength);
-}
+          Robot.m_driveTrain.drive(0,turnStrength);
+         }
        }
        else if (current_angle > target)
        { 
@@ -187,8 +141,7 @@ public class RocketFinder extends Command {
          { System.out.println("TURNING 3");
            current_angle = Robot.m_driveTrain.gyro.getYaw();
            SmartDashboard.putNumber("current angle", current_angle);
-           //Robot.m_driveTrain.drive(0,-turnStrength);
-           Robot.m_driveTrain.autoDrive(turnStrength, turnStrength);
+           Robot.m_driveTrain.drive(0,-turnStrength);
          }
        }
      }
@@ -199,9 +152,7 @@ public class RocketFinder extends Command {
          if (current_angle < (target - tolerance))
           current_angle = Robot.m_driveTrain.gyro.getYaw();
           SmartDashboard.putNumber("current angle", current_angle);
-         //Robot.m_driveTrain.drive(0,turnStrength);
-         Robot.m_driveTrain.autoDrive(turnStrength, turnStrength);
-
+         Robot.m_driveTrain.drive(0,turnStrength);
          System.out.println("TURNING 3");
        }
        else if (current_angle > target)
@@ -210,19 +161,15 @@ public class RocketFinder extends Command {
          {
            current_angle = Robot.m_driveTrain.gyro.getYaw();
            SmartDashboard.putNumber("current angle", current_angle);
-           //Robot.m_driveTrain.drive(0,-turnStrength);
-           Robot.m_driveTrain.autoDrive(turnStrength, turnStrength);
-
+           Robot.m_driveTrain.drive(0,-turnStrength);
            System.out.println("TURNING 3");
          }
         }
-        
-      } 
-      */
+      }        
+    }
   }
-/*
   protected void turnToAngle(double target)
-  {
+  {/*
     double tolerance = 5; //degrees of tolerance
     
     System.out.println("we are running turn to Angle");
@@ -270,8 +217,8 @@ public class RocketFinder extends Command {
       //Robot.m_driveTrain.talonR.set(0);
       Robot.m_driveTrain.drive(0,0);
       //isFinished();
-      return; 
-} */
+      return; */
+  } 
 
   // Make this return true when this Command no longer needs to run execute()
   @Override

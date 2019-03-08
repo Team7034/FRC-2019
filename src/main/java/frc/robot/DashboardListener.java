@@ -27,8 +27,8 @@ public class DashboardListener {
         NetworkTableEntry automatic = SmartDashboard.getEntry("automatic");
         NetworkTableEntry gear = SmartDashboard.getEntry("highGear");
         NetworkTableEntry forward = SmartDashboard.getEntry("forward");
-        NetworkTableEntry xTarget = SmartDashboard.getEntry("xTarget");
-        NetworkTableEntry yTarget = SmartDashboard.getEntry("yTarget");
+        NetworkTableEntry xTarget = SmartDashboard.getEntry("x_target");
+        NetworkTableEntry yTarget = SmartDashboard.getEntry("y_target");
         //NetworkTableEntry xy = SmartDashboard.getEntry("position");
         NetworkTableEntry test = SmartDashboard.getEntry("listenerTest");
 

@@ -44,14 +44,15 @@ public class PathFollower extends Command {
 		myPath.configPIDAG(kP, kI, kD, kA, kG);
 		
 		//Starts the notifier
-		follower.startPeriodic(myPath.getDT());
+		//follower.startPeriodic(myPath.getDT());
 		System.out.println("_Starting path");
 		//SmartDashboard.putString("Last Path", myPath.getName());
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	
+    	double[] speeds = myPath.calculateSpeeds(driveT.getEncPosL(), driveT.getEncPosR(), driveT.getAngle());
+		driveT.autoDrive(speeds[0], speeds[1]);
     }
 
     // Make this return true when this Command no longer needs to run execute()

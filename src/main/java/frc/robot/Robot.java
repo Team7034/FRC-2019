@@ -152,6 +152,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("xTarget", 0);
     SmartDashboard.putNumber("yTarget", 0);
     SmartDashboard.putData(new ToggleCompressor());
+    m_driveTrain.auto = false;
     
     listener.run();
   }
@@ -167,9 +168,11 @@ public class Robot extends TimedRobot {
     if(!m_driveTrain.auto) {
       Scheduler.getInstance().add(new Drive());
     }
+
+    Scheduler.getInstance().add(new ManualArm());
     
-    double angle = m_driveTrain.gyro.getYaw();
-    SmartDashboard.putNumber("teleop angle", angle);
+    //double angle = m_driveTrain.gyro.getAngle();
+    //SmartDashboard.putNumber("teleop angle", angle);
 
     /*
     if(OI.cont.getDPAD("left")){
@@ -181,7 +184,7 @@ public class Robot extends TimedRobot {
     }
     */
 
-    double target = 0;
+    /*double target = 0;
     double roll = m_driveTrain.gyro.getRoll();
     if(roll < 0){
       target = .4* roll;
@@ -195,18 +198,18 @@ public class Robot extends TimedRobot {
       target = 1;
     }else if(target < -1){
       target = -1;
-    }
+    }*/
     //m_arm.arm_target = target;
     //m_arm.manual_arm(target);
 
     //m_arm.controller.setSetpoint(target);
     
-    m_arm.controller.setOutputRange(-.1, .1);
+    /*m_arm.controller.setOutputRange(-.1, .1);
     m_arm.controller.setP(0.1);
     m_arm.controller.setD(.13);
     m_arm.controller.setF(0.035);
     SmartDashboard.putNumber("AutoBal Tar", target);
-    SmartDashboard.putNumber("Arm Enc", m_arm.get_arm_pos());
+    SmartDashboard.putNumber("Arm Enc", m_arm.get_arm_pos());*/
 
     //SmartDashboard.putBoolean("forward", forward);
     if (OI.cont.getDPAD("up")) {
@@ -234,6 +237,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Robot y", m_driveTrain.yPos);
     SmartDashboard.putBoolean("High Gear", m_driveTrain.inHighGear());
     SmartDashboard.putBoolean("forward", !m_driveTrain.reversed);
+    SmartDashboard.putNumber("ele enc", m_arm.get_ele_pos());
   }
 
   /**

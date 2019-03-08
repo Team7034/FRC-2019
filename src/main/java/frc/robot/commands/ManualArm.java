@@ -28,10 +28,12 @@ public class ManualArm extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.m_arm.manual_ele(Robot.m_oi.getElevator());
-    Robot.m_arm.manual_arm(.3*Robot.m_oi.getArm());
+    if(Robot.m_arm.run_manual_arm){
+      Robot.m_arm.manual_arm(.3*Robot.m_oi.getArm());
+    }
+    Robot.m_arm.manual_ele(-Robot.m_oi.getElevator());
     SmartDashboard.putNumber("ArmEnc", Robot.m_arm.get_arm_pos());
-    SmartDashboard.putNumber("ArmTar", Robot.m_arm.arm_target);
+    //SmartDashboard.putNumber("ArmTar", Robot.m_arm.arm_target);
     //SmartDashboard.putNumber("ArmTar", Robot.m_oi.getArm());
     SmartDashboard.putNumber("EleEnc", Robot.m_arm.get_ele_pos());
     }

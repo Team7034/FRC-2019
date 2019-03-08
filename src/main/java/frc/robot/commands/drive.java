@@ -26,6 +26,7 @@ public class drive extends Command {
         driveX = Robot.m_oi.getDriveX();
         //speedControl = (-Robot.m_oi.getSlider() + 3)/4;
         Robot.m_driveTrain.drive(driveY, driveX);
+        Robot.m_habLift.runHabLift(driveY);
     }
 
     // Make this return true when this Command no longer needs to run execute()

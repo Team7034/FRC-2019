@@ -19,7 +19,8 @@ public class ArmReverse extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.arm_forward = !Robot.arm_forward;
+    //Robot.arm_forward = !Robot.arm_forward;
+    Robot.m_arm.arm_forward = !Robot.m_arm.arm_forward;
   }
 
   // Called repeatedly when this Command is scheduled to run

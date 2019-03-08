@@ -29,6 +29,7 @@ public class habLift extends Subsystem {
     // setDefaultCommand(new MySpecialCommand());
     rear = new DoubleSolenoid(RobotMap.habLiftRear[0], RobotMap.habLiftRear[1]);
     front = new DoubleSolenoid(RobotMap.habLiftFront[0], RobotMap.habLiftFront[1]);
+    talon = new WPI_TalonSRX(RobotMap.habLift);
   }
 
   public void extendFront() {
@@ -45,6 +46,11 @@ public class habLift extends Subsystem {
   }
 
   public void runHabLift(double value) {
-    talon.set(value);
+    if(front.get() == DoubleSolenoid.Value.kForward || rear.get() == DoubleSolenoid.Value.kForward) {
+      talon.set(-value);
+    }
+    else {
+      talon.set(0);
+    }
   }
 }

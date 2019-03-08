@@ -14,15 +14,7 @@ public class pathFollower extends Command {
 
 	private Notifier follower = new Notifier(this::followPath);
 	private Path myPath;
-	/*
-		+/- : involves left(-) or right(+) loading station (not part of the file name)
-		cs/rkt : involves cargo ship(cs) or rocket ship(rkt)
-		C/F : deposit area is on close(C) or far(F) side of the field
-		number : specific section of the deposit location
-		+/- : to(+) or from(-) the loading station
-
-		ex: "+csF2-"
-	*/
+	
     public pathFollower(Path path) {
 		super("pathFollower");
 		//requires(Robot.m_driveTrain);
@@ -42,7 +34,7 @@ public class pathFollower extends Command {
         double kA = SmartDashboard.getNumber("Path A", myPath.kA);
         double kG = SmartDashboard.getNumber("Path G", myPath.kG);
 		myPath.configPIDAG(kP, kI, kD, kA, kG);
-		
+
 		//Starts the notifier
 		//follower.startPeriodic(myPath.getDT());
 		System.out.println("_Starting path");

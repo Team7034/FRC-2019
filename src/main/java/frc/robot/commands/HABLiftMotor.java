@@ -8,13 +8,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
-import frc.robot.subsystems.driveTrain;
 
-public class reverse extends Command {
-  private driveTrain dt = Robot.m_driveTrain;
-  public reverse() {
+public class HABLiftMotor extends Command {
+  private boolean state;
+
+  public HABLiftMotor(boolean state) {
+    this.state = state;
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -22,14 +22,6 @@ public class reverse extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    dt.setReversed(!dt.getReversed());
-    Robot.m_led.update(!dt.getReversed());
-    if(!dt.getReversed()){
-      SmartDashboard.putString("switching", "0");
-    }
-    else{
-      SmartDashboard.putString("switching", "1");
-    }
   }
 
   // Called repeatedly when this Command is scheduled to run

@@ -32,7 +32,7 @@ public class arm extends Subsystem {
   public WPI_TalonSRX lift;
   public WPI_TalonSRX lift2;
 
-  public boolean arm_forward = true;
+  public boolean arm_forward = false;
 
   //list of possible arm states
   public static Map<String, Integer> state;
@@ -46,6 +46,7 @@ public class arm extends Subsystem {
   //ball mid
   //ball high
   private double armPosition[] = {0, 12, 10, 4.5, 12, 8, 3.5};
+  private double arm_grab_position = 16;
 
   //pid targets for various elevator set heights
   //bottom
@@ -67,6 +68,7 @@ public class arm extends Subsystem {
   public static double arm_target = 0;
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
+  public static boolean run_manual_arm = false;
 
   public arm(){
     //intialize hashmap of states
@@ -79,6 +81,7 @@ public class arm extends Subsystem {
     tempListMap.put("ballLow", 4);
     tempListMap.put("ballMid", 5);
     tempListMap.put("ballHigh", 6);
+    tempListMap.put("ballGrab", 7);
     state = Collections.unmodifiableMap(tempListMap);
 
     lift = new WPI_TalonSRX(RobotMap.liftR); //main left motor
@@ -130,8 +133,12 @@ public class arm extends Subsystem {
    * @return              has the arm reached the target positon?
    */
   public boolean setArm(int target_level){
-    arm_target = armPosition[target_level];
-    if(Robot.arm_forward){
+    if(target_level == 7){
+      arm_target = arm_grab_position;
+    }else{
+      arm_target = armPosition[target_level];
+    }
+    if(arm_forward){
       arm_target *= -1;
     }
 

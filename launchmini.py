@@ -46,6 +46,7 @@ class LaunchpadMini(LaunchpadBase): #launchpad mini class, extends the launchpad
         #network tables init
         logging.basicConfig(level=logging.DEBUG) #to see messages from networktables
         NetworkTables.initialize(server="10.70.34.2") #connects to 7034 server
+        #NetworkTables.initialize(server="169.254.192.87") #connects to 7034 server
         
         '''
         #code to wait until connected
@@ -227,8 +228,8 @@ class LaunchpadMini(LaunchpadBase): #launchpad mini class, extends the launchpad
             self.net_table.putNumber("gridStat", self.grid_status)
             coords = self.convert_coords(button[0], button[1])
             #self.net_table.putNumberArray("position", coords)
-            self.net_table.putNumber("x_target", coords[0])
-            self.net_table.putNumber("y_target", coords[1])
+            self.net_table.putNumber("Robot x", coords[0])
+            self.net_table.putNumber("Robot y", coords[1])
             #send coordinates of grid? to tell robot its goal location um that's a casey problem
 
         if button[0] >= 2 and button[0] <= 5 and button[1] >= 3 and button[1] <= 6 and button[2] and self.grid_status == 0:

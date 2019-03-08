@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -41,7 +42,6 @@ public class driveTrain extends Subsystem {
 	public static final boolean LOW_GEAR = true;
 	public static final boolean HIGH_GEAR = false;
 
-	public boolean reversed;
 	public boolean auto;
 	public int xPos = 0;
 	public int yPos = 0;
@@ -93,7 +93,7 @@ public class driveTrain extends Subsystem {
     
     public void drive(double speed, double rot) {
 		
-		if (!reversed) {
+		if (!Robot.forward) {
 			diffDrive.arcadeDrive(-speed, -rot);
 		}
 		else {
@@ -102,7 +102,7 @@ public class driveTrain extends Subsystem {
 	}
 
 	public void autoDrive(double leftSpeed, double rightSpeed) {
-		if (!reversed) {
+		if (!Robot.forward) {
 			diffDrive.tankDrive(leftSpeed, -rightSpeed);
 		}
 		else {
@@ -124,8 +124,8 @@ public class driveTrain extends Subsystem {
 	}
 
 	public void setReversed(boolean reversed) {
-		this.reversed = reversed;
-		if (this.reversed) {
+		Robot.forward = reversed;
+		if (Robot.forward) {
 			leftDrive = talonR;
 			rightDrive = talonL;
 		}
@@ -136,7 +136,7 @@ public class driveTrain extends Subsystem {
 	}
 
 	public boolean getReversed() {
-		return reversed;
+		return Robot.forward;
 	}
     
     public void setTarget(int targetL, int targetR) {

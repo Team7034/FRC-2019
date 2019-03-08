@@ -22,7 +22,7 @@ public class Path {
 
     private final double wheelbase_width = 0.646;
 	private final double wheel_diameter = 0.104;
-    private final double max_velocity = 2.5;
+    private final double max_velocity = 5;
     private final double max_acceleration = 5;
     private final double max_jerk = 60;
     private final int TICKS_PER_REV = 18000;
@@ -60,6 +60,7 @@ public class Path {
         //DOES NOT WORK WITH LATEST VERSION OF PATHFINDER, USE 2019.1.12
         Trajectory lTrajectory;
         Trajectory rTrajectory;
+        System.out.println("_loading path " + pathFileName);
         if (!flip) {
             lTrajectory = PathfinderFRC.getTrajectory("output/" + pathFileName + ".left");
 		    rTrajectory = PathfinderFRC.getTrajectory("output/" + pathFileName + ".right");
@@ -68,6 +69,7 @@ public class Path {
             lTrajectory = PathfinderFRC.getTrajectory("output/" + pathFileName + ".right");
 		    rTrajectory = PathfinderFRC.getTrajectory("output/" + pathFileName + ".left");
         }
+        System.out.println("_path " + pathFileName + " is loaded");
         dt = lTrajectory.get(0).dt;
 
         left = new EncoderFollower(lTrajectory);
@@ -138,7 +140,7 @@ public class Path {
 		if (flip) {
 			turn *= -1;
         }
-        turn = 0;
+        //turn = 0;
         double left_speed = left.calculate(leftEncPos);
         double right_speed = right.calculate(rightEncPos);
         return new double[]{left_speed + turn, -right_speed + turn};
@@ -157,7 +159,15 @@ public class Path {
         return yNew;
     }
     
-	//returns instructions for which path to follow
+    /*
+		+/- : involves left(-) or right(+) loading station (not part of the file name)
+		cs/rkt : involves cargo ship(cs) or rocket ship(rkt)
+		C/F : deposit area is on close(C) or far(F) side of the field
+		number : specific section of the deposit location
+		+/- : to(+) or from(-) the loading station
+
+		ex: "+csF2-"
+	*/
 	public static String findPath(int xPos, int yPos, int x, int y) {
 		String flip = "-";
 		int number = 0;

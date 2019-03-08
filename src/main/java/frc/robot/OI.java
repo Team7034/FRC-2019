@@ -41,7 +41,7 @@ public class OI {
   Button upright = new JoystickButton(cont, 4);
   Button open = new JoystickButton(cont, 5);
   Button close = new JoystickButton(cont, 6);
-  Button hatchHigh = new JoystickButton(cont, 7);
+  Button ball_grab_cont = new JoystickButton(cont, 7);
   Button arm_reverse = new JoystickButton(cont, 8);
 
 
@@ -81,14 +81,14 @@ public class OI {
     forward.whenPressed(new AutomaticArm(arm.state.get("ballLow")));
     backward.whenPressed(new AutomaticArm(arm.state.get("ballHigh")));
     mid.whenPressed(new AutomaticArm(arm.state.get("ballMid")));
-    hatchHigh.whenPressed(new AutomaticArm(arm.state.get("hatchHigh")));
+    ball_grab_cont.whenPressed(new AutomaticArm(arm.state.get("ballGrab")));
     arm_reverse.whenPressed(new ArmReverse());
     
-    open.whenPressed(new grab(false));
-    close.whenPressed(new grab(true));
+    open.whenPressed(new grab(true));
+    close.whenPressed(new grab(false));
 
     //button panel
-    cargo_low.whenPressed(new AutomaticArm(arm.state.get("ballLow")));
+    /*cargo_low.whenPressed(new AutomaticArm(arm.state.get("ballLow")));
     cargo_mid.whenPressed(new AutomaticArm(arm.state.get("ballMid")));
     cargo_high.whenPressed(new AutomaticArm(arm.state.get("ballHigh")));
     cargo_intake.whenPressed(new AutoGrab());
@@ -96,12 +96,13 @@ public class OI {
     hatch_low.whenPressed(new AutomaticArm(arm.state.get("hatchLow")));
     hatch_mid.whenPressed(new AutomaticArm(arm.state.get("hatchMid")));
     hatch_high.whenPressed(new AutomaticArm(arm.state.get("hatchHigh")));
-    open_panel.whenPressed(new grab(false));
+    open_panel.whenPressed(new grab(true));
     
     //toggle_man
+    toggle_man.toggleWhenPressed(new toggleManualArm());
     //blank
     up.whenPressed(new AutomaticArm(arm.state.get("rest")));
-    close_panel.whenPressed(new grab(true));
+    close_panel.whenPressed(new grab(false));*/
   }
   
 

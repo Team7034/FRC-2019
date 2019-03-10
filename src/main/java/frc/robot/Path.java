@@ -61,21 +61,29 @@ public class Path {
         Trajectory lTrajectory;
         Trajectory rTrajectory;
         System.out.println("_loading path " + pathFileName);
-        if (!flip) {
+        try {
             lTrajectory = PathfinderFRC.getTrajectory("output/" + pathFileName + ".left");
-		    rTrajectory = PathfinderFRC.getTrajectory("output/" + pathFileName + ".right");
-        }
-        else {
-            lTrajectory = PathfinderFRC.getTrajectory("output/" + pathFileName + ".right");
-		    rTrajectory = PathfinderFRC.getTrajectory("output/" + pathFileName + ".left");
-        }
-        System.out.println("_path " + pathFileName + " is loaded");
-        dt = lTrajectory.get(0).dt;
+            rTrajectory = PathfinderFRC.getTrajectory("output/" + pathFileName + ".right");
+            System.out.println("_path " + pathFileName + " is loaded");
 
-        left = new EncoderFollower(lTrajectory);
-        right = new EncoderFollower(rTrajectory);
-        left.configurePIDVA(kP, kI, kD, 1 / max_velocity, kA);
-		right.configurePIDVA(kP, kI, kD, 1 / max_velocity, kA);
+            if (flip) {
+                Trajectory temp = rTrajectory;
+                rTrajectory = lTrajectory;
+                lTrajectory = temp;
+            }
+            System.out.println("_path " + pathFileName + " is loaded");
+            dt = lTrajectory.get(0).dt;
+    
+            left = new EncoderFollower(lTrajectory);
+            right = new EncoderFollower(rTrajectory);
+            left.configurePIDVA(kP, kI, kD, 1 / max_velocity, kA);
+            right.configurePIDVA(kP, kI, kD, 1 / max_velocity, kA);
+        }
+        catch (IOException e) {
+            pathName = null;
+            System.out.println("_PATH FAILED");
+            e.printStackTrace();
+        }
     }
 
     public Path(double x, double y, double rot) {

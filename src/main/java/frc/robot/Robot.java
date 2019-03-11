@@ -126,6 +126,10 @@ public class Robot extends TimedRobot {
     //Robot.m_led.update(false);
     //Scheduler.getInstance().add(new reverse());
     m_driveTrain.auto = false;
+    if(team == Alliance.Invalid){
+      team = m_ds.getAlliance();
+      m_led.updateAlliance(team);
+    }
   }
 
   /**
@@ -142,47 +146,6 @@ public class Robot extends TimedRobot {
 
     Scheduler.getInstance().add(new ManualArm());
     
-    //double angle = m_driveTrain.gyro.getAngle();
-    //SmartDashboard.putNumber("teleop angle", angle);
-
-    /*
-    if(OI.cont.getDPAD("left")){
-      Scheduler.getInstance().add(new HABLiftRear(true));
-      //Scheduler.getInstance().add(new AutomaticArm(Arm.state.get("hatchLow")));
-    }else if(OI.cont.getDPAD("right")){
-      Scheduler.getInstance().add(new HABLiftRear(false));
-      //Scheduler.getInstance().add(new AutomaticArm(Arm.state.get("hatchMid")));
-    }
-    */
-
-    /*double target = 0;
-    double roll = m_driveTrain.gyro.getRoll();
-    if(roll < 0){
-      target = .4* roll;
-    } else if(roll > 0 && roll < 1.5){
-      target = -.25;
-    } else if(roll > 1.5){
-      target = .2* roll;
-    }
-    
-    if(target > 1){
-      target = 1;
-    }else if(target < -1){
-      target = -1;
-    }*/
-    //m_arm.arm_target = target;
-    //m_arm.manual_arm(target);
-
-    //m_arm.controller.setSetpoint(target);
-    
-    /*m_arm.controller.setOutputRange(-.1, .1);
-    m_arm.controller.setP(0.1);
-    m_arm.controller.setD(.13);
-    m_arm.controller.setF(0.035);
-    SmartDashboard.putNumber("AutoBal Tar", target);
-    SmartDashboard.putNumber("Arm Enc", m_arm.get_arm_pos());*/
-
-    //SmartDashboard.putBoolean("forward", forward);
     if (OI.cont.getDPAD("up")) {
       m_claw.runIntake(m_claw.target_power);
     }
@@ -195,43 +158,22 @@ public class Robot extends TimedRobot {
 
     Scheduler.getInstance().run();
 
-    SmartDashboard.putNumber("navx pitch", m_driveTrain.gyro.getPitch());
-    SmartDashboard.putNumber("navx?", m_driveTrain.gyro.getRawGyroX());
-    SmartDashboard.putNumber("navx roll", m_driveTrain.gyro.getRoll());
-    SmartDashboard.putNumber("navx yaw", m_driveTrain.gyro.getYaw());
-    SmartDashboard.putNumber("PositionL", m_driveTrain.getEncPosL());
-    SmartDashboard.putNumber("PositionR", m_driveTrain.getEncPosR());
-    SmartDashboard.putNumber("Speed", m_driveTrain.getSpeed());
-    SmartDashboard.putNumber("Resistance", m_driveTrain.getResistance());
-    SmartDashboard.putBoolean("Auto", m_driveTrain.auto);
-    SmartDashboard.putNumber("Robot x", m_driveTrain.xPos);
-    SmartDashboard.putNumber("Robot y", m_driveTrain.yPos);
-    SmartDashboard.putBoolean("High Gear", m_driveTrain.inHighGear());
-    SmartDashboard.putBoolean("forward", forward);
     SmartDashboard.putNumber("ele enc", m_arm.get_ele_pos());
   }
 
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
     m_driveTrain.setLocation(0, 0);
 
-    //Scheduler.getInstance().add(new moveArm());
-    //Scheduler.getInstance().add(new moveLift());
-    //Scheduler.getInstance().add(new AutoShifter());
-    SmartDashboard.putData(new autoShifter());
-    //SmartDashboard.putData(new PathToPoint(2, 0, 0));
-    //SmartDashboard.putNumberArray("pos_array", new double[]{0, 0});
-    SmartDashboard.putNumber("x_target", 0);
-    SmartDashboard.putNumber("y_target", 0);
     SmartDashboard.putData(new ToggleCompressor());
     m_driveTrain.auto = false;
+    if(team == Alliance.Invalid){
+      team = m_ds.getAlliance();
+      m_led.updateAlliance(team);
+    }
   }
 
   /**
@@ -245,50 +187,7 @@ public class Robot extends TimedRobot {
     if(!m_driveTrain.auto) {
       Scheduler.getInstance().add(new drive());
     }
-
-    Scheduler.getInstance().add(new ManualArm());
     
-    //double angle = m_driveTrain.gyro.getAngle();
-    //SmartDashboard.putNumber("teleop angle", angle);
-
-    /*
-    if(OI.cont.getDPAD("left")){
-      Scheduler.getInstance().add(new HABLiftRear(true));
-      //Scheduler.getInstance().add(new AutomaticArm(Arm.state.get("hatchLow")));
-    }else if(OI.cont.getDPAD("right")){
-      Scheduler.getInstance().add(new HABLiftRear(false));
-      //Scheduler.getInstance().add(new AutomaticArm(Arm.state.get("hatchMid")));
-    }
-    */
-
-    /*double target = 0;
-    double roll = m_driveTrain.gyro.getRoll();
-    if(roll < 0){
-      target = .4* roll;
-    } else if(roll > 0 && roll < 1.5){
-      target = -.25;
-    } else if(roll > 1.5){
-      target = .2* roll;
-    }
-    
-    if(target > 1){
-      target = 1;
-    }else if(target < -1){
-      target = -1;
-    }*/
-    //m_arm.arm_target = target;
-    //m_arm.manual_arm(target);
-
-    //m_arm.controller.setSetpoint(target);
-    
-    /*m_arm.controller.setOutputRange(-.1, .1);
-    m_arm.controller.setP(0.1);
-    m_arm.controller.setD(.13);
-    m_arm.controller.setF(0.035);
-    SmartDashboard.putNumber("AutoBal Tar", target);
-    SmartDashboard.putNumber("Arm Enc", m_arm.get_arm_pos());*/
-
-    //SmartDashboard.putBoolean("forward", forward);
     if (OI.cont.getDPAD("up")) {
       m_claw.runIntake(m_claw.target_power);
     }
@@ -299,22 +198,35 @@ public class Robot extends TimedRobot {
       m_claw.runIntake(0);
     }
 
-    Scheduler.getInstance().run();
-
-    SmartDashboard.putNumber("navx pitch", m_driveTrain.gyro.getPitch());
-    SmartDashboard.putNumber("navx?", m_driveTrain.gyro.getRawGyroX());
-    SmartDashboard.putNumber("navx roll", m_driveTrain.gyro.getRoll());
-    SmartDashboard.putNumber("navx yaw", m_driveTrain.gyro.getYaw());
-    SmartDashboard.putNumber("PositionL", m_driveTrain.getEncPosL());
-    SmartDashboard.putNumber("PositionR", m_driveTrain.getEncPosR());
-    SmartDashboard.putNumber("Speed", m_driveTrain.getSpeed());
-    SmartDashboard.putNumber("Resistance", m_driveTrain.getResistance());
-    SmartDashboard.putBoolean("Auto", m_driveTrain.auto);
-    SmartDashboard.putNumber("Robot x", m_driveTrain.xPos);
-    SmartDashboard.putNumber("Robot y", m_driveTrain.yPos);
-    SmartDashboard.putBoolean("High Gear", m_driveTrain.inHighGear());
-    SmartDashboard.putBoolean("forward", forward);
     SmartDashboard.putNumber("ele enc", m_arm.get_ele_pos());
+
+    if(OI.cont.getRSB()){
+      m_arm.arm_forward = true;
+      m_arm.controller.setOutputRange(-.1, .1);
+      m_arm.controller.setD(.13);
+      double target = 0;
+      double roll = m_driveTrain.gyro.getRoll();
+      if(roll < 0){
+        target = .3* roll;
+      } else if(roll > 0 && roll < 1.5){
+        target = -.25;
+      } else if(roll > 1.5){
+        target = .2* roll;
+      }    
+      if(target > 0){
+        target = 0;
+      }else if(target < -1){
+          target = -1;
+      }
+      m_arm.controller.setSetpoint(target);
+    }else{
+      m_arm.controller.setOutputRange(-.25, .25);
+      m_arm.controller.setD(.16);
+      //m_arm.controller.setSetpoint(0);
+      //Scheduler.getInstance().add(new ManualArm());
+    }
+
+    Scheduler.getInstance().run();
   }
 
   /**

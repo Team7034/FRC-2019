@@ -29,6 +29,7 @@ public class HABLiftFront extends Command {
     else {
       hl.retractFront();
     }
+    Robot.m_arm.arm_forward = true;
   }
 
   // Called repeatedly when this Command is scheduled to run

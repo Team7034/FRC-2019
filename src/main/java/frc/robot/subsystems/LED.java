@@ -27,7 +27,8 @@ public class LED extends Subsystem {
 
   public LED(Alliance team_color){
     controller = new LightDrivePWM(new Servo(RobotMap.LED1), new Servo(RobotMap.LED2));
-    team = team_color;
+    //team = team_color;
+    team = Alliance.Blue;
     on(0);
     on(1);
     controller.Update();
@@ -68,7 +69,8 @@ public class LED extends Subsystem {
   }
 
   public void updateAlliance(Alliance alli){
-    team = alli;
+    //team = alli;
+    team = Alliance.Blue;
   }
 
   @Override

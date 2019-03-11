@@ -44,6 +44,8 @@ public class OI {
   Button ball_grab_cont = new JoystickButton(cont, 7);
   Button arm_reverse = new JoystickButton(cont, 8);
 
+  Button arm_autobal = new JoystickButton(cont, 10);
+
 
   //button panel
   Button cargo_low = new JoystickButton(gunner, 1);
@@ -77,9 +79,9 @@ public class OI {
     joyB11.whenPressed(new zeroSensors());
     joyB12.whenPressed(new pathFollower(new Path("-simple")));
     
-    upright.whenPressed(new AutomaticArm(arm.state.get("rest")));
-    forward.whenPressed(new AutomaticArm(arm.state.get("ballLow")));
-    backward.whenPressed(new AutomaticArm(arm.state.get("ballHigh")));
+    upright.whenPressed(new AutomaticArm(8));
+    forward.whenPressed(new AutomaticArm(9));
+    backward.whenPressed(new AutomaticArm(10));
     mid.whenPressed(new AutomaticArm(arm.state.get("ballMid")));
     ball_grab_cont.whenPressed(new AutomaticArm(arm.state.get("ballGrab")));
     arm_reverse.whenPressed(new ArmReverse());
@@ -87,8 +89,11 @@ public class OI {
     open.whenPressed(new grab(true));
     close.whenPressed(new grab(false));
 
+    //arm_autobal.whileHeld(new AutoBalance());
+    //arm_autobal.toggleWhenPressed(new AutoBalance());
+
     //button panel
-    /*cargo_low.whenPressed(new AutomaticArm(arm.state.get("ballLow")));
+    cargo_low.whenPressed(new AutomaticArm(arm.state.get("ballLow")));
     cargo_mid.whenPressed(new AutomaticArm(arm.state.get("ballMid")));
     cargo_high.whenPressed(new AutomaticArm(arm.state.get("ballHigh")));
     cargo_intake.whenPressed(new AutoGrab());
@@ -98,11 +103,11 @@ public class OI {
     hatch_high.whenPressed(new AutomaticArm(arm.state.get("hatchHigh")));
     open_panel.whenPressed(new grab(true));
     
-    //toggle_man
-    toggle_man.toggleWhenPressed(new toggleManualArm());
-    //blank
+    //toggle_man.toggleWhenPressed(new toggleManualArm());
+    toggle_man.whenPressed(new AutomaticArm(arm.state.get("ballGrab")));
+    blank.whenPressed(new ArmReverse());
     up.whenPressed(new AutomaticArm(arm.state.get("rest")));
-    close_panel.whenPressed(new grab(false));*/
+    close_panel.whenPressed(new grab(false));
   }
   
 

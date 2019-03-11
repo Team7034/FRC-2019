@@ -25,7 +25,7 @@ public class claw extends Subsystem {
   public Solenoid claw;
   public IRSensor irsense;
 
-  public double target_power = 1;
+  public double target_power = .5;
 
   @Override
   public void initDefaultCommand() {

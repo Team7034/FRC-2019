@@ -45,8 +45,10 @@ public class arm extends Subsystem {
   //ball low
   //ball mid
   //ball high
-  private double armPosition[] = {0, 12, 10, 4.5, 12, 8, 3.5};
+  //ball intake
+  private double armPosition[] = {0, 12, 10, 4.5, 12, 8, 5, 16, 1.03, 3.5, 12};
   private double arm_grab_position = 16;
+
 
   //pid targets for various elevator set heights
   //bottom
@@ -56,7 +58,8 @@ public class arm extends Subsystem {
   //ball low
   //ball mid
   //ball high
-  private int elevatorPosition[] = {0, 10000, 30000, 34000, 18000, 28000, 34000};
+  //ball intake
+  private int elevatorPosition[] = {0, 10000, 30000, 33000, 18000, 28000, 33000, 13500, 0, 0, 0};
   //private int elevatorPosition[] = {0, 1000000, 2000000, 2600000, 0, 2000000, 2600000};
 
   //PID controllers
@@ -91,7 +94,7 @@ public class arm extends Subsystem {
 
     lift.setSensorPhase(false);
     //lift.setSensorPhase(true);
-    lift.configClosedLoopPeakOutput(0, 0.3);
+    lift.configClosedLoopPeakOutput(0, .7);
     lift.setSelectedSensorPosition(0);
     lift.setNeutralMode(NeutralMode.Brake);
     lift2.setNeutralMode(NeutralMode.Brake);
@@ -133,11 +136,7 @@ public class arm extends Subsystem {
    * @return              has the arm reached the target positon?
    */
   public boolean setArm(int target_level){
-    if(target_level == 7){
-      arm_target = arm_grab_position;
-    }else{
-      arm_target = armPosition[target_level];
-    }
+    arm_target = armPosition[target_level];
     if(arm_forward){
       arm_target *= -1;
     }
@@ -149,8 +148,6 @@ public class arm extends Subsystem {
       //check if elevator is ready for passthrough
       if(!ele_ready_passthrough()){
         //if not ready for passthrough, move arm to closest safe spot without passthrough
-        //lower ele to bottom
-        auto_ele(0);
         //if target is less than 0 and it needs pass through, arm must be positive
         //set arm to largest positive value
         if(arm_target < 0){
@@ -158,16 +155,61 @@ public class arm extends Subsystem {
         }else if (arm_target > 0){
           controller.setSetpoint(-1*armPosition[3]);
         }
+        else{//arm is going up
+          if(get_arm_pos() > 0){
+            controller.setSetpoint(armPosition[3]);
+          }else if(get_arm_pos() > 0){
+            controller.setSetpoint(-1*armPosition[3]);
+          }
+        }
+        //lower ele to bottom
+        auto_ele(0);
         return false; //false means command is not done, currently waiting on arm to go down
       }//if it is ready, it will simply continue and run the arm
     }
     else{
-      controller.setSetpoint(arm_target);
-      return true;
+      //does arm need to go below parallel? and ele isn't up
+      if(get_ele_pos() < 10000){
+        if(Math.abs(arm_target) > 12){
+          if(arm_target > 0){
+            controller.setSetpoint(armPosition[1]);
+          }else if(arm_target < 0){
+            controller.setSetpoint(-1*armPosition[1]);
+          }
+          auto_ele(7);
+          return false;
+        }else{
+          controller.setSetpoint(arm_target);
+          return true;
+        }
+      }
+      else{//ele is in valid pos, just do it
+        controller.setSetpoint(arm_target);
+        return true;
+      }
     }
 
     //update target
-    controller.setSetpoint(arm_target);
+    //controller.setSetpoint(arm_target);
+    //does arm need to go below parallel? and ele isn't up
+    if(get_ele_pos() < 10000){
+      if(Math.abs(arm_target) > 12){
+        if(arm_target > 0){
+          controller.setSetpoint(armPosition[1]);
+        }else if(arm_target < 0){
+          controller.setSetpoint(-1*armPosition[1]);
+        }
+        auto_ele(7);
+        return false;
+      }else{
+        controller.setSetpoint(arm_target);
+        return true;
+      }
+    }
+    else{//ele is in valid pos, just do it
+      controller.setSetpoint(arm_target);
+      //return true;
+    }
     
 
     //check to see if arm has reached target (within threshhold of error)
@@ -180,7 +222,7 @@ public class arm extends Subsystem {
   }
   
   public boolean auto_ele(int target){
-    int ele_tar = elevatorPosition[target];
+    int ele_tar = elevatorPosition[target];// + 2000;
     if(arm_ready_raise()){
       lift.set(ControlMode.Position, ele_tar);
     }else{

@@ -13,7 +13,7 @@ import frc.robot.Robot;
 
 public class moveLift extends Command {
   private int target;
-  private boolean finished = false;
+  //private boolean finished = false;
 
   public moveLift(int target) {
     this.target = target;
@@ -27,13 +27,13 @@ public class moveLift extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    finished = Robot.m_arm.auto_ele(target);
+    Robot.m_arm.auto_ele(target);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return finished;
+    return true;
   }
 
   // Called once after isFinished returns true

@@ -4,78 +4,46 @@ from networktables import NetworkTables
 import time
 import logging
 
-class LaunchpadMini(LaunchpadBase): #launchpad mini class, extends the launchpad base
-    '''
-    #showing time
-    i = 0
-    while True:
-        print("dsTime:", sd.getNumber("dsTime", "N/A"))
-        self.net_table.putNumber("robotTime", i)
-        time.sleep(1) #pauses the loop for 1 second
-        i += 1
-    '''
+
+#launchpad mini class, extends the launchpad base
+class LaunchpadMini(LaunchpadBase): 
+    
     #initialize launchpad and raise error if not connected
     def __init__( self ): #constructor
         super().__init__() #running the constructor for launchpad
         if not super().Open():
             raise RuntimeError("Could not connect to the Launchpad.")
 
-        self.Reset() #all functions need "self", and all variables
+        self.Reset() 
         self.quit_list = [False, False, 0] #when you hold down button 1 and 8 for 5 seconds it will quit
         self.button_state = [] #saves the values of the last button pressed
 
+        self.grid_status = 0
 
+        self.isCleared = False
 
-        self.automatic = False #alyssa is driving
-        self.grid_status = 0 
+        '''~~~~~~~~~~~~~~~grid_status~~~~~~~~~~~~~~~~~~~~~~
+        0: the main launchpad driving grid
+        1: resetting, middle 4x4 is red, if you hit a button within then it changes to self.grid_status = 0
+        2: the entire thing is green, alyssa can manually drive
+        3: the entire thing is red, alyssa cannot manually drive
+
         '''
-        are u resetting (when you're not on a set path by pathfinder so you hit where 
-        you are on the launchpad map) (1) or is it in driving mode (0)
-        '''
-        self.high_gear = True #should basically always be in high gear
-
-        self.piball_high = False
-
-
-
-
-        #set up basic leds
-        self.LedCtrlXY(8,1,3,3) #button A
-        self.LedCtrlXY(8,2,0,0) #button B
-
-        #network tables init
-        logging.basicConfig(level=logging.DEBUG) #to see messages from networktables
-        NetworkTables.initialize(server="10.70.34.2") #connects to 7034 server
         
-        '''
-        #code to wait until connected
-        cond = threading.Condition() 
-        notified = [False]
+        #button = [x,y,on/off]
 
-        def connectionListener(connected, info):
-            print(info, '; Connected=%s' % connected)
-            with cond:
-                notified[0] = True
-                cond.notify()
-
-        NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
-
-        with cond:
-            print("Waiting")
-            if not notified[0]:
-                cond.wait()
-        print("Connected!")'''
+        #network tables initializion:
+        #to see messages from networktables
+        logging.basicConfig(level=logging.DEBUG) 
+        #connects to 7034 server
+        NetworkTables.initialize(server="10.70.34.2") 
 
         #creates an instance of the network table
-        #remember to use self
         self.net_table = NetworkTables.getTable("SmartDashboard")
         #creating a subtable in the network table
         self.pos_table = self.net_table.getSubTable("miniTable")
 
-    #-------------------------------------------------------------------------------------
-    #-- reset the Launchpad
-    #-- Turns off all LEDs
-    #-------------------------------------------------------------------------------------
+    #reset the launchpad & turn off all LEDs
     def Reset( self ):
         self.midi.RawWrite( 176, 0, 0 )
 
@@ -97,7 +65,6 @@ class LaunchpadMini(LaunchpadBase): #launchpad mini class, extends the launchpad
         led |= green << 4 
         
         return led
-
         
     #-------------------------------------------------------------------------------------
     #-- Controls a grid LED by its raw <number>; with <green/red> brightness: 0..3
@@ -115,7 +82,6 @@ class LaunchpadMini(LaunchpadBase): #launchpad mini class, extends the launchpad
             # 0-120
             led = self.LedGetColor( red, green )
             self.midi.RawWrite( 144, number, led )
-
 
     #-------------------------------------------------------------------------------------
     #-- Controls a grid LED by its coordinates <x> and <y>  with <green/red> brightness 0..3
@@ -145,7 +111,6 @@ class LaunchpadMini(LaunchpadBase): #launchpad mini class, extends the launchpad
         
         self.midi.RawWrite( 176, 104 + number, led )
 
-
     #-------------------------------------------------------------------------------------
     #-- all LEDs on
     #-- <colorcode> is here for backwards compatibility with the newer "Mk2" and "Pro"
@@ -158,15 +123,12 @@ class LaunchpadMini(LaunchpadBase): #launchpad mini class, extends the launchpad
         else:
             self.midi.RawWrite( 176, 0, 127 )
 
-
-                    
     #-------------------------------------------------------------------------------------
     #-- Returns True if a button event was received.
     #-------------------------------------------------------------------------------------
     def ButtonChanged( self ):
         return self.midi.ReadCheck()
 
-        
     #-------------------------------------------------------------------------------------
     #-- Returns the raw value of the last button change as a list:
     #-- [ <button>, <True/False> ]
@@ -177,7 +139,6 @@ class LaunchpadMini(LaunchpadBase): #launchpad mini class, extends the launchpad
             return [ a[0][0][1] if a[0][0][0] == 144 else a[0][0][1] + 96, True if a[0][0][2] > 0 else False ]
         else:
             return []
-
 
     #-------------------------------------------------------------------------------------
     #-- Returns an x/y value of the last button change as a list:
@@ -200,63 +161,57 @@ class LaunchpadMini(LaunchpadBase): #launchpad mini class, extends the launchpad
         
         self.button_state = []
         return self.button_state
-
-    #general frc LED functions ect
-    #button = [x,y,on/off]
-
-    def check_buttons(self, button):
-        #check if auto has been toggled
-        #if y equals 0 and its pressed and basically if its one of those top circle buttons [2,7]
-        if button[1] == 0 and button[2] and button[0] >= 1 and button[0] <= 6:
-            self.automatic = not self.automatic
-            #send self.automatic to the robot
-            self.net_table.putBoolean("automatic", self.automatic)
         
+    def check_buttons(self, button):    
+        self.button_state = button
         #check if position needs to be reset
 
         if button[0] == 1 and button[1] == 2 and button[2] and self.grid_status == 0:
             self.grid_status = 1 #1 means position is reset
-            self.net_table.putNumber("gridStat", self.grid_status)
+            self.net_table.putNumber("gridStat", self.grid_status) 
         
         #check if position has been reset
         #in central four buttons on launchpad
         if button[0] >= 2 and button[0] <= 5 and button[1] >= 3 and button[1] <= 6 and button[2] and self.grid_status == 1:
             self.reset_grid()
-            self.grid_status = 0 #0 means driving mode, we're on track, not resetting mode
+            self.grid_status = 0 #0 means alyssa's driving, pathfinder is ready to go
             self.net_table.putNumber("gridStat", self.grid_status)
             coords = self.convert_coords(button[0], button[1])
-            self.net_table.putNumberArray("position", coords)
-            #send coordinates of grid? to tell robot its goal location um that's a casey problem
+            #self.net_table.putNumberArray("position", coords)
+            self.net_table.putNumber("x_robot", coords[0])
+            self.net_table.putNumber("y_robot", coords[1]) 
 
-        if button[0] >= 2 and button[0] <= 5 and button[1] >= 3 and button[1] <= 6 and button[2] and self.grid_status == 0:
+        elif button[0] >= 2 and button[0] <= 5 and button[1] >= 3 and button[1] <= 6 and button[2] and self.grid_status == 0:
             coords = self.convert_coords(button[0],button[1])
-            self.net_table.putNumberArray("position", coords)
- 
-        #check if shifting
-        if button[0] == 8 and button[1] == 1 and button[2] and self.high_gear:
-            self.high_gear = False
-            self.LedCtrlXY(8,1,3,3)
-            self.LedCtrlXY(8,2,0,0)
-            self.net_table.putBoolean("highGear", self.high_gear)
-        elif button[0] == 8 and button[1] == 2 and button[2] and not self.high_gear:
-            self.high_gear = True
-            self.LedCtrlXY(8,1,0,0)
-            self.LedCtrlXY(8,2,3,3)
-            self.net_table.putBoolean("highGear", self.high_gear)
-    
-        #check if going for ball rocket
-        '''if automatic == True:
-            if y == 2 and (x == 0 or x == 3):
-                self.piball_high = True
-                self.net_table.putBoolean("piBallHigh", self.piball_high)
+            #self.net_table.putNumberArray("position", coords)
+            self.net_table.putNumber("x_target", coords[0])
+            self.net_table.putNumber("y_target", coords[1])
+
+
+
+    def update_drive_status(self):
+        if self.quit_list[2] == 0:
+            if self.grid_status == 0:
+                self.LedCtrlXY(0,0,0,3)
+                self.LedCtrlXY(1,0,0,3)
+                self.LedCtrlXY(2,0,0,3)
+                self.LedCtrlXY(3,0,0,3)
+                self.LedCtrlXY(4,0,0,3)
+                self.LedCtrlXY(5,0,0,3)
+                self.LedCtrlXY(6,0,0,3)
+                self.LedCtrlXY(7,0,0,3)
             else:
-                self.piball_high = False
-                self.net_table.putBoolean("piBallHigh", self.piball_high)
-        else:
-            self.piball_high = False
-            self.net_table.putBoolean("piBallHigh", self.piball_high)
-            
-        #robot code for grabbing balls'''
+                self.LedCtrlXY(0,0,3,0)
+                self.LedCtrlXY(1,0,3,0)
+                self.LedCtrlXY(2,0,3,0)
+                self.LedCtrlXY(3,0,3,0)
+                self.LedCtrlXY(4,0,3,0)
+                self.LedCtrlXY(5,0,3,0)
+                self.LedCtrlXY(6,0,3,0)
+                self.LedCtrlXY(7,0,3,0)
+
+
+    
 
     def check_quit( self ):
         if self.button_state != []:
@@ -294,27 +249,6 @@ class LaunchpadMini(LaunchpadBase): #launchpad mini class, extends the launchpad
             self.quit_list[2] = 0
             return False
 
-    def update_drive_status(self):
-        if self.quit_list[2] == 0:
-            if self.automatic:
-                self.LedCtrlXY(0,0,0,3)
-                self.LedCtrlXY(1,0,0,3)
-                self.LedCtrlXY(2,0,0,3)
-                self.LedCtrlXY(3,0,0,3)
-                self.LedCtrlXY(4,0,0,3)
-                self.LedCtrlXY(5,0,0,3)
-                self.LedCtrlXY(6,0,0,3)
-                self.LedCtrlXY(7,0,0,3)
-            else:
-                self.LedCtrlXY(0,0,3,0)
-                self.LedCtrlXY(1,0,3,0)
-                self.LedCtrlXY(2,0,3,0)
-                self.LedCtrlXY(3,0,3,0)
-                self.LedCtrlXY(4,0,3,0)
-                self.LedCtrlXY(5,0,3,0)
-                self.LedCtrlXY(6,0,3,0)
-                self.LedCtrlXY(7,0,3,0)
-
     def check_center(self, button):
         if button[0] >=2 and button[0] <= 5 and button[1] >= 3 and button[1] <= 6:
             if button[2]:
@@ -351,7 +285,7 @@ class LaunchpadMini(LaunchpadBase): #launchpad mini class, extends the launchpad
             self.LedCtrlXY(3,3,3,0)
             self.LedCtrlXY(4,3,3,0)
             self.LedCtrlXY(5,3,3,0)
-            self.LedCtrlXY(2,4,3,0)
+            self.LedCtrlXY(2,4,3,0) 
             self.LedCtrlXY(3,4,3,0)
             self.LedCtrlXY(4,4,3,0)
             self.LedCtrlXY(5,4,3,0)
@@ -364,6 +298,22 @@ class LaunchpadMini(LaunchpadBase): #launchpad mini class, extends the launchpad
             self.LedCtrlXY(4,6,3,0)
             self.LedCtrlXY(5,6,3,0)
 
+
+        #if (self.net_table.getNumber("gridStat", 0) == 0) and (self.grid_status != 0):
+        if self.net_table.getNumber("gridStat", 0) == 0:
+            self.grid_status = 0
+        if self.net_table.getNumber("gridStat", 0) == 1:
+            self.grid_status = 1
+        if self.net_table.getNumber("gridStat", 0) == 3:
+            self.grid_status = 3
+        if self.net_table.getNumber("gridStat", 0) == 4:
+            self.grid_status = 4
+        
+
+
+        #self.net_table.putNumber("gridStat", self.grid_status)
+
+
     def convert_coords(self, device_x, device_y) : #wait how do i use device_x and device_y
         if device_y == 3:
             y = 3
@@ -375,3 +325,31 @@ class LaunchpadMini(LaunchpadBase): #launchpad mini class, extends the launchpad
             y = 0
         x = device_x - 2
         return (x, y)
+
+    def show_drive_method(self):
+        if self.grid_status == 3: #all green!
+            self.clear_board()
+            for x in range(0, 9):
+                for y in range(0, 9):
+                    self.LedCtrlXY(x,y,0,3)
+        elif self.grid_status == 4: #all red!
+            self.clear_board()
+            for x in range(0, 9):
+                for y in range(0, 9):
+                    self.LedCtrlXY(x,y,3,0)
+
+    def lightup_target(self):
+        if self.grid_status == 0:
+            print("path in progress")
+            self.LedCtrlXY(button[0], button[1], 3, 0)
+
+
+    def drive_mode(self):
+        if button[0] == 8 and button[1] == 1:
+            self.grid_status == 1
+            self.net_table.putNumber("gridStat", self.grid_status)
+
+    def clear_board(self):
+        for x in range(0, 9):
+            for y in range(0, 9):
+                self.LedCtrlXY(x,y,0,0)

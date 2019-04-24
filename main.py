@@ -9,10 +9,10 @@ if __name__ == "__main__": #just python's psvm
     
 
     while True:
-        lp.LedCtrlXY(7,1,0,3)
-        lp.LedCtrlXY(7,2,3,0)
-        lp.update_drive_status() #automatic or manual - alyssa is driving around or we're using buttons
         lp.update_grid_status() #central 4x4 & lights
+        lp.update_drive_status()
+        lp.show_drive_method()
+        
 
         if lp.ButtonChanged():
             #whenever a button is pressed, get info, update LEDS
